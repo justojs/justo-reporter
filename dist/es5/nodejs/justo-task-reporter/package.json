@@ -34,7 +34,7 @@
     "node": ">=0.12.0"
   },
   "dependencies": {
-    "juto-util": "*",
+    "justo-util": "*",
     "colors": "*",
     "vit-logger": "*"
   },
