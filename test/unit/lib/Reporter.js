@@ -11,7 +11,7 @@ const SimpleTaskResult = jresult.SimpleTaskResult;
 const MultiTaskResult = jresult.MultiTaskResult;
 const ParameterizedTaskResult = jresult.ParameterizedTaskResult;
 const ResultState = jresult.ResultState;
-const reporter = require("../../../dist/es5/nodejs/justo-task-reporter");
+const reporter = require("../../../dist/es5/nodejs/justo-reporter");
 const Reporter = reporter.Reporter;
 
 //suite

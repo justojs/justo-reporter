@@ -12,7 +12,7 @@
   "plusplus" : false,
   "regexp" : true,
   "undef" : false,
-  "strict" : true,
+  "strict" : false,
   "trailing" : true,
 
   "asi" : false,

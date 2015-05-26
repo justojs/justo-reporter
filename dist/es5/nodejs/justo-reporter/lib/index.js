@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _get = function get(_x4, _x5, _x6) { var _again = true; _function: while (_again) { var object = _x4, property = _x5, receiver = _x6; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x4 = parent; _x5 = property; _x6 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x6, _x7, _x8) { var _again = true; _function: while (_again) { var object = _x6, property = _x7, receiver = _x8; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x6 = parent; _x7 = property; _x8 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -15,7 +15,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var _justoTaskResult = require("justo-task-result");
 
-var _justoUtil = require("justo-util");
+/**
+ * Indents a text.
+ *
+ * @param txt:string      The text to indent.
+ * @param [level]:number  The level to indent.
+ * @param [itxt]:string   The text that indents.
+ */
+function indent(txt) {
+  var level = arguments[1] === undefined ? 1 : arguments[1];
+  var itxt = arguments[2] === undefined ? "  " : arguments[2];
+
+  var pre;
+
+  //(1) indent
+  pre = "";
+  for (var i = 0; i < level; ++i) {
+    pre += itxt;
+  }txt = txt.replace(/^/gm, pre);
+
+  //(2) return
+  return txt;
+}
 
 /**
  * A reporter.
@@ -183,10 +204,10 @@ var ConsoleWriter = (function (_Writer) {
 
       //(2) write
       if (res.state !== _justoTaskResult.ResultState.FAILED) {
-        console.log((0, _justoUtil.indent)(txt, res.level + 1));
+        console.log(indent(txt, res.level + 1));
       } else {
-        console.error((0, _justoUtil.indent)(txt, res.level + 1));
-        console.error((0, _justoUtil.indent)(res.error.stack, res.level + 1));
+        console.error(indent(txt, res.level + 1));
+        console.error(indent(res.error.stack, res.level + 1));
       }
     }
   }, {
@@ -207,7 +228,7 @@ var ConsoleWriter = (function (_Writer) {
 
     /**
      * Returns the state text to display.
-      * @protected
+       * @protected
      * @param res:Result  The result to check.
      * @return string
      */

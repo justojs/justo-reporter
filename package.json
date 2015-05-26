@@ -1,7 +1,7 @@
 {
-  "name": "justo-task-reporter",
-  "version": "0.1.0",
-  "description": "A task reporter.",
+  "name": "justo-reporter",
+  "version": "0.2.0",
+  "description": "Reporter.",
   "homepage": "http://www.justojs.org",
   "license": "MIT",
   "author": {
@@ -18,33 +18,27 @@
   ],
   "keywords": [
     "Justo",
-    "Justo.js",
-    "Task",
-    "Task reporter"
+    "Justo.js"
   ],
   "bugs": {
-    "url": "https://github.com/JustoJS/justo-task-reporter/issues",
+    "url": "https://github.com/justojs/justo-reporter/issues",
     "email": "justojs.org@outlook.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/JustoJS/justo-task-reporter.git"
+    "url": "https://github.com/justojs/justo-reporter.git"
   },
   "engines": {
     "node": ">=0.12.0"
   },
   "dependencies": {
-    "justo-util": "*",
-    "colors": "*",
-    "vit-logger": "*"
+    "colors": "*"
   },
   "peerDependencies": {
     "justo-task-result": "*"
   },
   "devDependencies": {
     "justo-assert": "*",
-    "justo-assert-file": "*",
-    "justo-assert-childprocess": "*",
     "justo-double": "*",
     "mocha": "*",
     "grunt": "^0.4.5",
@@ -63,6 +57,6 @@
     "test"
   ],
   "scripts": {
-    "test": "grunt mochaTest:es5"
+    "test": "grunt test"
   }
 }
