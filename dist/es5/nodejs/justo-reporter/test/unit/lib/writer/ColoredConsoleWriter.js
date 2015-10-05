@@ -1,30 +1,20 @@
 //imports
-const stub = require("justo-double").stub;
-const jresult = require("justo-task-result");
-const SuiteResult = jresult.SuiteResult;
-const InitializerResult = jresult.InitializerResult;
-const FinalizerResult = jresult.FinalizerResult;
-const SimpleTaskResult = jresult.SimpleTaskResult;
-const MultiTaskResult = jresult.MultiTaskResult;
-const ParameterizedTaskResult = jresult.ParameterizedTaskResult;
-const ResultState = jresult.ResultState;
-const reporter = require("../../../../dist/es5/nodejs/justo-reporter");
-const ColoredConsoleWriter = reporter.ColoredConsoleWriter;
+const ColoredConsoleWriter = require("../../../../dist/es5/nodejs/justo-reporter").ColoredConsoleWriter;
 
 //suite
 describe("writer.ColoredConsoleWriter", function() {
-  describe("#construtor()", function() {
+  describe("#constructor()", function() {
     it("constructor()", function() {
       var writer = new ColoredConsoleWriter();
 
       writer.must.have({
-        passed: "✓",
-        failed: "✖",
-        ignored: "#"
+        passed: {text: "✓", color: "green"},
+        failed: {text: "✖", color: "red"},
+        ignored: {text: "#", color: "blue"}
       });
     });
 
-    it("constructor(opts)", function() {
+    it("constructor(opts) - options as strings", function() {
       var writer = new ColoredConsoleWriter({
         passed: "PASSED",
         failed: "FAILED",
@@ -32,9 +22,23 @@ describe("writer.ColoredConsoleWriter", function() {
       });
 
       writer.must.have({
-        passed: "PASSED",
-        failed: "FAILED",
-        ignored: "IGNORED"
+        passed: {text: "PASSED", color: "green"},
+        failed: {text: "FAILED", color: "red"},
+        ignored: {text: "IGNORED", color: "blue"}
+      });
+    });
+
+    it("constructor(opts) - options as objects", function() {
+      var writer = new ColoredConsoleWriter({
+        passed: {text: "PASSED", color: "red"},
+        failed: {text: "FAILED", color: "green"},
+        ignored: {text: "IGNORED", color: "yellow"}
+      });
+
+      writer.must.have({
+        passed: {text: "PASSED", color: "red"},
+        failed: {text: "FAILED", color: "green"},
+        ignored: {text: "IGNORED", color: "yellow"}
       });
     });
   });

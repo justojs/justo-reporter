@@ -32,7 +32,8 @@ module.exports = function(grunt) {
 
       preCompiler: {
       	src: [
-          "lib/index.js",
+          "lib/imports.js",
+          "lib/util.js",
           "lib/Reporter.js",
           "lib/Writer.js",
           "lib/writer/ConsoleWriter.js",

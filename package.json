@@ -1,7 +1,7 @@
 {
   "name": "justo-reporter",
-  "version": "0.2.0",
-  "description": "Reporter.",
+  "version": "0.3.0",
+  "description": "Result reporter.",
   "homepage": "http://www.justojs.org",
   "license": "MIT",
   "author": {
@@ -35,7 +35,7 @@
     "colors": "*"
   },
   "peerDependencies": {
-    "justo-task-result": "*"
+    "justo-result": "*"
   },
   "devDependencies": {
     "justo-assert": "*",

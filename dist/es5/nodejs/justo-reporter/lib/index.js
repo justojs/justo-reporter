@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _get = function get(_x6, _x7, _x8) { var _again = true; _function: while (_again) { var object = _x6, property = _x7, receiver = _x8; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x6 = parent; _x7 = property; _x8 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x6, _x7, _x8) { var _again = true; _function: while (_again) { var object = _x6, property = _x7, receiver = _x8; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x6 = parent; _x7 = property; _x8 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -13,7 +13,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _justoTaskResult = require("justo-task-result");
+var _justoResult = require("justo-result");
 
 /**
  * Indents a text.
@@ -23,8 +23,8 @@ var _justoTaskResult = require("justo-task-result");
  * @param [itxt]:string   The text that indents.
  */
 function indent(txt) {
-  var level = arguments[1] === undefined ? 1 : arguments[1];
-  var itxt = arguments[2] === undefined ? "  " : arguments[2];
+  var level = arguments.length <= 1 || arguments[1] === undefined ? 1 : arguments[1];
+  var itxt = arguments.length <= 2 || arguments[2] === undefined ? "  " : arguments[2];
 
   var pre;
 
@@ -41,43 +41,51 @@ function indent(txt) {
 /**
  * A reporter.
  *
- * @readonly suites:boolean             Must it report the suites?
- * @readonly finalizers:boolean         Must it report the finalizers?
- * @readonly initializers:boolean       Must it report the initializers?
- * @readonly simpleTasks:boolean        Must it report the simple tasks?
- * @readonly parameterizedTasks:boolean Must it report the parameterized tasks?
- * @readonly multiTasks:boolean         Must it report the multi tasks?
- * @readonly ignored:boolean            Must it report the ignored items?
- * @readonly passed:boolean             Must it report the passed items?
- * @readonly failed:boolean             Must it report the failed items?
- * @readonly writers:writers            The writers.
+ * @readonly name:string      The reporter name.
+ * @readonly display:object   What to display.
+ * @readonly writers:writers  The writers.
  */
 
 var Reporter = (function () {
   /**
    * Constructor.
    *
-   * @param [opts]:object The options: initializers (boolean), finalizers (boolean),
-   *                      ignored (boolean), passed (boolean), failed (boolean),
-   *                      suites (boolean), simpleTasks (boolean), parameterizedTasks
-   *                      (boolean) and multiTasks (boolean).
+   * @param(attr) name
+   * @param [opts]:object Reporter options: display (object).
    */
 
-  function Reporter() {
-    var opts = arguments[0] === undefined ? {} : arguments[0];
+  function Reporter(name) {
+    var opts = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
     _classCallCheck(this, Reporter);
 
-    Object.defineProperty(this, "suites", { value: opts.hasOwnProperty("suites") ? !!opts.suites : true, enumerable: true, writable: true });
-    Object.defineProperty(this, "finalizers", { value: opts.hasOwnProperty("finalizers") ? !!opts.finalizers : true, enumerable: true, writable: true });
-    Object.defineProperty(this, "initializers", { value: opts.hasOwnProperty("initializers") ? !!opts.initializers : true, enumerable: true, writable: true });
-    Object.defineProperty(this, "simpleTasks", { value: opts.hasOwnProperty("simpleTasks") ? !!opts.simpleTasks : true, enumerable: true, writable: true });
-    Object.defineProperty(this, "parameterizedTasks", { value: opts.hasOwnProperty("parameterizedTasks") ? !!opts.parameterizedTasks : true, enumerable: true, writable: true });
-    Object.defineProperty(this, "multiTasks", { value: opts.hasOwnProperty("multiTasks") ? !!opts.multiTasks : true, enumerable: true, writable: true });
-    Object.defineProperty(this, "ignored", { value: opts.hasOwnProperty("ignored") ? !!opts.ignored : true, enumerable: true, writable: true });
-    Object.defineProperty(this, "passed", { value: opts.hasOwnProperty("passed") ? !!opts.passed : true, enumerable: true, writable: true });
-    Object.defineProperty(this, "failed", { value: opts.hasOwnProperty("failed") ? !!opts.failed : true, enumerable: true, writable: true });
+    Object.defineProperty(this, "name", { value: name, enumerable: true });
     Object.defineProperty(this, "writers", { value: [] });
+    Object.defineProperty(this, "display", { enumerable: true, value: {
+        initializers: true,
+        finalizers: true,
+        suites: true,
+        multitasks: true,
+        simpleTasks: true,
+        subtasks: true,
+        ignored: true,
+        passed: true,
+        failed: true
+      } });
+
+    if (opts.display) {
+      var d = opts.display;
+
+      if (d.hasOwnProperty("initializers")) this.display.initializers = !!d.initializers;
+      if (d.hasOwnProperty("finalizers")) this.display.finalizers = !!d.finalizers;
+      if (d.hasOwnProperty("suites")) this.display.suites = !!d.suites;
+      if (d.hasOwnProperty("multitasks")) this.display.multitasks = !!d.multitasks;
+      if (d.hasOwnProperty("simpleTasks")) this.display.simpleTasks = !!d.simpleTasks;
+      if (d.hasOwnProperty("subtasks")) this.display.subtasks = !!d.subtasks;
+      if (d.hasOwnProperty("ignored")) this.display.ignored = !!d.ignored;
+      if (d.hasOwnProperty("passed")) this.display.passed = !!d.passed;
+      if (d.hasOwnProperty("failed")) this.display.failed = !!d.failed;
+    }
   }
 
   _createClass(Reporter, [{
@@ -92,15 +100,14 @@ var Reporter = (function () {
       var rep = true;
 
       //(1) check constraints
-      if (!this.suites && res instanceof _justoTaskResult.SuiteResult) rep = false;
-      if (!this.initializers && res instanceof _justoTaskResult.InitializerResult) rep = false;
-      if (!this.finalizers && res instanceof _justoTaskResult.FinalizerResult) rep = false;
-      if (!this.simpleTasks && res instanceof _justoTaskResult.SimpleTaskResult) rep = false;
-      if (!this.parameterizedTasks && res instanceof _justoTaskResult.ParameterizedTaskResult) rep = false;
-      if (!this.multiTasks && res instanceof _justoTaskResult.MultiTaskResult) rep = false;
-      if (!this.ignored && res.state === _justoTaskResult.ResultState.IGNORED) rep = false;
-      if (!this.passed && res.state === _justoTaskResult.ResultState.PASSED) rep = false;
-      if (!this.failed && res.state === _justoTaskResult.ResultState.FAILED) rep = false;
+      if (res instanceof _justoResult.SuiteResult && !this.display.suites) rep = false;
+      if (res instanceof _justoResult.InitializerResult && !this.display.initializers) rep = false;
+      if (res instanceof _justoResult.FinalizerResult && !this.display.finalizers) rep = false;
+      if (res instanceof _justoResult.SimpleTaskResult && !this.display.simpleTasks) rep = false;
+      if (res instanceof _justoResult.MultitaskResult && !this.display.multitasks) rep = false;
+      if (res.state === _justoResult.ResultState.IGNORED && !this.display.ignored) rep = false;
+      if (res.state === _justoResult.ResultState.PASSED && !this.display.passed) rep = false;
+      if (res.state === _justoResult.ResultState.FAILED && !this.display.failed) rep = false;
 
       //(2) write
       if (rep) {
@@ -159,32 +166,41 @@ exports.Writer = Writer;
 /**
  * A console writer.
  *
- * @readonly passed:string  The text to write if passed.
- * @readonly failed:string  The text to write if failed.
- * @readonly ignored:string The text to write if ignored.
+ * @readonly passed:object  The text to write if passed.
+ * @readonly failed:object  The text to write if failed.
+ * @readonly ignored:object The text to write if ignored.
  */
 
 var ConsoleWriter = (function (_Writer) {
+  _inherits(ConsoleWriter, _Writer);
+
   /**
    * Constructor.
    *
-   * @param [opts]:object The options: passed (string), failed (string) and
-   *                      ignored (string).
+   * @param [opts]:object The options: passed (string or object),
+   *                      failed (string or object) and ignored (string or object).
    */
 
   function ConsoleWriter() {
-    var opts = arguments[0] === undefined ? {} : arguments[0];
+    var opts = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
     _classCallCheck(this, ConsoleWriter);
 
     _get(Object.getPrototypeOf(ConsoleWriter.prototype), "constructor", this).call(this);
 
-    Object.defineProperty(this, "passed", { value: opts.passed || "✓", enumerable: true });
-    Object.defineProperty(this, "failed", { value: opts.failed || "✖", enumerable: true });
-    Object.defineProperty(this, "ignored", { value: opts.ignored || "#", enumerable: true });
-  }
+    Object.defineProperty(this, "passed", { value: value(opts, "passed", "✓"), enumerable: true });
+    Object.defineProperty(this, "failed", { value: value(opts, "failed", "✖"), enumerable: true });
+    Object.defineProperty(this, "ignored", { value: value(opts, "ignored", "#"), enumerable: true });
 
-  _inherits(ConsoleWriter, _Writer);
+    //helper
+    function value(opts, state, def) {
+      var res = opts[state];
+
+      if (!res) res = { text: def };else if (typeof res == "string") res = { text: res };
+
+      return res;
+    }
+  }
 
   _createClass(ConsoleWriter, [{
     key: "write",
@@ -196,14 +212,14 @@ var ConsoleWriter = (function (_Writer) {
       var txt;
 
       //(1) format
-      if (res instanceof _justoTaskResult.SuiteResult) {
+      if (res instanceof _justoResult.SuiteResult) {
         txt = this.formatTitle(res);
       } else {
         txt = this.formatStateText(res) + " " + this.formatTitle(res);
       }
 
       //(2) write
-      if (res.state !== _justoTaskResult.ResultState.FAILED) {
+      if (res.state !== _justoResult.ResultState.FAILED) {
         console.log(indent(txt, res.level + 1));
       } else {
         console.error(indent(txt, res.level + 1));
@@ -234,12 +250,12 @@ var ConsoleWriter = (function (_Writer) {
      */
     value: function formatStateText(res) {
       switch (res.state) {
-        case _justoTaskResult.ResultState.PASSED:
-          res = this.passed;break;
-        case _justoTaskResult.ResultState.FAILED:
-          res = this.failed;break;
-        case _justoTaskResult.ResultState.IGNORED:
-          res = this.ignored;break;
+        case _justoResult.ResultState.PASSED:
+          res = this.passed.text;break;
+        case _justoResult.ResultState.FAILED:
+          res = this.failed.text;break;
+        case _justoResult.ResultState.IGNORED:
+          res = this.ignored.text;break;
       }
 
       return res;
@@ -259,6 +275,8 @@ var colors = require("colors/safe");
  */
 
 var ColoredConsoleWriter = (function (_ConsoleWriter) {
+  _inherits(ColoredConsoleWriter, _ConsoleWriter);
+
   /**
    * Constructor.
    *
@@ -266,14 +284,25 @@ var ColoredConsoleWriter = (function (_ConsoleWriter) {
    */
 
   function ColoredConsoleWriter() {
-    var opts = arguments[0] === undefined ? {} : arguments[0];
+    var opts = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
     _classCallCheck(this, ColoredConsoleWriter);
 
     _get(Object.getPrototypeOf(ColoredConsoleWriter.prototype), "constructor", this).call(this, opts);
-  }
 
-  _inherits(ColoredConsoleWriter, _ConsoleWriter);
+    this.passed.color = color(opts, "passed", "green");
+    this.failed.color = color(opts, "failed", "red");
+    this.ignored.color = color(opts, "ignored", "blue");
+
+    //helper functions
+    function color(opts, state, def) {
+      var res = opts[state];
+
+      if (!res || !res.hasOwnProperty("color")) res = def;else res = res.color;
+
+      return res;
+    }
+  }
 
   _createClass(ColoredConsoleWriter, [{
     key: "formatTitle",
@@ -282,7 +311,7 @@ var ColoredConsoleWriter = (function (_ConsoleWriter) {
      * @override
      */
     value: function formatTitle(res) {
-      if (res instanceof _justoTaskResult.SuiteResult) res = colors.white(res.title);else res = colors.gray(res.title);
+      if (res instanceof _justoResult.SuiteResult) res = colors.white(res.title);else res = colors.gray(res.title);
 
       return res;
     }
@@ -294,12 +323,12 @@ var ColoredConsoleWriter = (function (_ConsoleWriter) {
      */
     value: function formatStateText(res) {
       switch (res.state) {
-        case _justoTaskResult.ResultState.PASSED:
-          res = colors.green(this.passed);break;
-        case _justoTaskResult.ResultState.FAILED:
-          res = colors.red(this.failed);break;
-        case _justoTaskResult.ResultState.IGNORED:
-          res = colors.blue(this.ignored);break;
+        case _justoResult.ResultState.PASSED:
+          res = colors[this.passed.color](this.passed.text);break;
+        case _justoResult.ResultState.FAILED:
+          res = colors[this.failed.color](this.failed.text);break;
+        case _justoResult.ResultState.IGNORED:
+          res = colors[this.ignored.color](this.ignored.text);break;
       }
 
       return res;

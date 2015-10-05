@@ -3,60 +3,66 @@ const jdouble = require("justo-double");
 const spy = jdouble.spy;
 const dummy = jdouble.dummy;
 const stub = jdouble.stub;
-const jresult = require("justo-task-result");
+const jresult = require("justo-result");
 const SuiteResult = jresult.SuiteResult;
 const InitializerResult = jresult.InitializerResult;
 const FinalizerResult = jresult.FinalizerResult;
 const SimpleTaskResult = jresult.SimpleTaskResult;
-const MultiTaskResult = jresult.MultiTaskResult;
-const ParameterizedTaskResult = jresult.ParameterizedTaskResult;
+const MultitaskResult = jresult.MultitaskResult;
 const ResultState = jresult.ResultState;
-const reporter = require("../../../dist/es5/nodejs/justo-reporter");
-const Reporter = reporter.Reporter;
+const Reporter = require("../../../dist/es5/nodejs/justo-reporter").Reporter;
 
 //suite
 describe("Reporter", function() {
   describe("#constructor()", function() {
-    it("constructor()", function() {
-      var rep = new Reporter();
+    it("constructor(name)", function() {
+      var rep = new Reporter("reporter");
 
       rep.must.have({
-        suites: true,
-        finalizers: true,
-        initializers: true,
-        simpleTasks: true,
-        parameterizedTasks: true,
-        multiTasks: true,
-        ignored: true,
-        passed: true,
-        failed: true,
+        name: "reporter",
+        display: {
+          suites: true,
+          finalizers: true,
+          initializers: true,
+          simpleTasks: true,
+          multitasks: true,
+          subtasks: true,
+          ignored: true,
+          passed: true,
+          failed: true
+        },
         writers: []
       });
     });
 
-    it("constructor(opts)", function() {
-      var rep = new Reporter({
-        suites: false,
-        finalizers: false,
-        initializers: false,
-        simpleTasks: false,
-        parameterizedTasks: false,
-        multiTasks: false,
-        ignored: false,
-        passed: false,
-        failed: false
+    it("constructor(name, opts)", function() {
+      var rep = new Reporter("reporter", {
+        display: {
+          initializers: false,
+          finalizers: false,
+          suites: false,
+          multitasks: false,
+          subtasks: false,
+          simpleTasks: false,
+          ignored: false,
+          passed: false,
+          failed: false
+        }
       });
 
       rep.must.have({
-        suites: false,
-        finalizers: false,
-        initializers: false,
-        simpleTasks: false,
-        parameterizedTasks: false,
-        multiTasks: false,
-        ignored: false,
-        passed: false,
-        failed: false,
+        name: "reporter",
+        display: {
+          initializers: false,
+          finalizers: false,
+          suites: false,
+          multitasks: false,
+          subtasks: false,
+          simpleTasks: false,
+          ignored: false,
+          passed: false,
+          failed: false
+        },
         writers: []
       });
     });
@@ -66,7 +72,7 @@ describe("Reporter", function() {
     var reporter;
 
     beforeEach(function() {
-      reporter = new Reporter();
+      reporter = new Reporter("reporter");
     });
 
     it("add(writer) - once", function() {
@@ -85,13 +91,13 @@ describe("Reporter", function() {
     var reporter, writer, res;
 
     beforeEach(function() {
-      reporter = new Reporter();
+      reporter = new Reporter("reporter");
       reporter.add(writer = spy({write: dummy()}, "write()"));
     });
 
     describe("report(suite)", function() {
       beforeEach(function() {
-        res = new SuiteResult({});
+        res = stub(new SuiteResult(), {"@state": ResultState.PASSED});
       });
 
       it("report(res) - with write()", function() {
@@ -101,7 +107,7 @@ describe("Reporter", function() {
       });
 
       it("report(res) - no write()", function() {
-        reporter.suites = false;
+        reporter.display.suites = false;
         reporter.report(res);
         writer.spy.called("write()").must.be.eq(0);
       });
@@ -119,7 +125,7 @@ describe("Reporter", function() {
       });
 
       it("report(res) - no write()", function() {
-        reporter.initializers = false;
+        reporter.display.initializers = false;
         writer.spy.called("write()").must.be.eq(0);
       });
     });
@@ -136,7 +142,7 @@ describe("Reporter", function() {
       });
 
       it("report(res) - no write()", function() {
-        reporter.finalizers = false;
+        reporter.display.finalizers = false;
         reporter.report(res);
         writer.spy.called("write()").must.be.eq(0);
       });
@@ -144,7 +150,7 @@ describe("Reporter", function() {
 
     describe("report(simpleTask)", function() {
       beforeEach(function() {
-        res = new SimpleTaskResult();
+        res = stub(new SimpleTaskResult(), {"@state": ResultState.PASSED});
       });
 
       it("report(res) - with write()", function() {
@@ -154,7 +160,7 @@ describe("Reporter", function() {
       });
 
       it("report(res) - no write()", function() {
-        reporter.simpleTasks = false;
+        reporter.display.simpleTasks = false;
         reporter.report(res);
         writer.spy.called("write()").must.be.eq(0);
       });
@@ -162,7 +168,7 @@ describe("Reporter", function() {
 
     describe("report(multiTask)", function() {
       beforeEach(function() {
-        res = new MultiTaskResult();
+        res = stub(new MultitaskResult(), {"@state": ResultState.PASSED});
       });
 
       it("report(res) - with write()", function() {
@@ -172,25 +178,7 @@ describe("Reporter", function() {
       });
 
       it("report(res) - no write()", function() {
-        reporter.multiTasks = false;
-        reporter.report(res);
-        writer.spy.called("write()").must.be.eq(0);
-      });
-    });
-
-    describe("report(parameterizedTask)", function() {
-      beforeEach(function() {
-        res = new ParameterizedTaskResult();
-      });
-
-      it("report(res) - with write()", function() {
-        reporter.report(res);
-        writer.spy.called("write()").must.be.eq(1);
-        writer.spy.calledWith("write()", [res]).must.be.eq(1);
-      });
-
-      it("report(res) - no write()", function() {
-        reporter.parameterizedTasks = false;
+        reporter.display.multitasks = false;
         reporter.report(res);
         writer.spy.called("write()").must.be.eq(0);
       });
@@ -208,7 +196,7 @@ describe("Reporter", function() {
       });
 
       it("report(res) - no write()", function() {
-        reporter.passed = false;
+        reporter.display.passed = false;
         reporter.report(res);
         writer.spy.called("write()").must.be.eq(0);
       });
@@ -226,7 +214,7 @@ describe("Reporter", function() {
       });
 
       it("report(res) - no write()", function() {
-        reporter.failed = false;
+        reporter.display.failed = false;
         reporter.report(res);
         writer.spy.called("write()").must.be.eq(0);
       });
@@ -244,7 +232,7 @@ describe("Reporter", function() {
       });
 
       it("report(res) - no write()", function() {
-        reporter.ignored = false;
+        reporter.display.ignored = false;
         reporter.report(res);
         writer.spy.called("write()").must.be.eq(0);
       });
