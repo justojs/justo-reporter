@@ -35,7 +35,9 @@ module.exports = function(grunt) {
           "lib/imports.js",
           "lib/util.js",
           "lib/Reporter.js",
+          "lib/Reporters.js",
           "lib/Writer.js",
+          "lib/Writers.js",
           "lib/writer/ConsoleWriter.js",
           "lib/writer/ColoredConsoleWriter.js"
         ],

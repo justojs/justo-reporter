@@ -5,11 +5,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _get = function get(_x6, _x7, _x8) { var _again = true; _function: while (_again) { var object = _x6, property = _x7, receiver = _x8; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x6 = parent; _x7 = property; _x8 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x7, _x8, _x9) { var _again = true; _function: while (_again) { var object = _x7, property = _x8, receiver = _x9; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x7 = parent; _x8 = property; _x9 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -42,8 +42,9 @@ function indent(txt) {
  * A reporter.
  *
  * @readonly name:string      The reporter name.
+ * @readonly enabled:boolean  Is the reported enabled?
  * @readonly display:object   What to display.
- * @readonly writers:writers  The writers.
+ * @readonly writers:Writers  The writers.
  */
 
 var Reporter = (function () {
@@ -51,16 +52,18 @@ var Reporter = (function () {
    * Constructor.
    *
    * @param(attr) name
-   * @param [opts]:object Reporter options: display (object).
+   * @param [opts]:object Reporter options: enabled (boolean), display (object).
    */
 
-  function Reporter(name) {
+  function Reporter() {
+    var name = arguments.length <= 0 || arguments[0] === undefined ? "default" : arguments[0];
     var opts = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
     _classCallCheck(this, Reporter);
 
     Object.defineProperty(this, "name", { value: name, enumerable: true });
-    Object.defineProperty(this, "writers", { value: [] });
+    Object.defineProperty(this, "enabled", { value: opts.hasOwnProperty("enabled") ? !!opts.enabled : true });
+    Object.defineProperty(this, "writers", { value: new Writers() });
     Object.defineProperty(this, "display", { enumerable: true, value: {
         initializers: true,
         finalizers: true,
@@ -88,16 +91,23 @@ var Reporter = (function () {
     }
   }
 
+  /**
+   * A collection of reporters.
+   */
+
+  /**
+   * Receives a result for reporting.
+   *
+   * @param res:Result  The result to report.
+   */
+
   _createClass(Reporter, [{
     key: "report",
-
-    /**
-     * Receives a result for reporting.
-     *
-     * @param res:Result  The result to report.
-     */
     value: function report(res) {
       var rep = true;
+
+      //(0) pre: enabled?
+      if (!this.enabled) return;
 
       //(1) check constraints
       if (res instanceof _justoResult.SuiteResult && !this.display.suites) rep = false;
@@ -109,23 +119,19 @@ var Reporter = (function () {
       if (res.state === _justoResult.ResultState.PASSED && !this.display.passed) rep = false;
       if (res.state === _justoResult.ResultState.FAILED && !this.display.failed) rep = false;
 
-      //(2) write
-      if (rep) {
-        for (var i = 0; i < this.writers.length; ++i) {
-          this.writers[0].write(res);
-        }
-      }
+      //(2) notify writers
+      if (rep) this.writers.write(res);
     }
-  }, {
-    key: "add",
 
     /**
      * Adds a writer.
      *
      * @param writer:Writer The writer to add.
      */
+  }, {
+    key: "add",
     value: function add(writer) {
-      this.writers.push(writer);
+      this.writers.add(writer);
     }
   }]);
 
@@ -134,16 +140,73 @@ var Reporter = (function () {
 
 exports.Reporter = Reporter;
 
-/**
- * A writer.
- *
- * @abstract
- */
+var Reporters = (function (_Array) {
+  _inherits(Reporters, _Array);
+
+  /**
+   * Constructor.
+   */
+
+  function Reporters() {
+    _classCallCheck(this, Reporters);
+
+    _get(Object.getPrototypeOf(Reporters.prototype), "constructor", this).call(this);
+  }
+
+  /**
+   * A writer.
+   *
+   * @abstract
+   */
+
+  /**
+   * Adds a new reporter.
+   *
+   * @overload One reporter.
+   * @param rep:Reporter  The reporter to add.
+   *
+   * @overload Several reporters.
+   * @param reps:Reporter[] The reporters to add.
+   */
+
+  _createClass(Reporters, [{
+    key: "add",
+    value: function add(reps) {
+      //(1) arguments
+      if (!(reps instanceof Array)) reps = [reps];
+
+      //(2) add reporters
+      for (var i = 0; i < reps.length; ++i) {
+        this.push(reps[i]);
+      }
+    }
+
+    /**
+     *
+     */
+  }, {
+    key: "report",
+    value: function report(res) {
+      for (var i = 0; i < this.length; ++i) {
+        var rep = this[i];
+        if (rep.enabled) rep.report(res);
+      }
+    }
+  }]);
+
+  return Reporters;
+})(Array);
+
+exports.Reporters = Reporters;
 
 var Writer = (function () {
   function Writer() {
     _classCallCheck(this, Writer);
   }
+
+  /**
+   * A collection of writers.
+   */
 
   _createClass(Writer, [{
     key: "write",
@@ -163,13 +226,65 @@ var Writer = (function () {
 
 exports.Writer = Writer;
 
-/**
- * A console writer.
- *
- * @readonly passed:object  The text to write if passed.
- * @readonly failed:object  The text to write if failed.
- * @readonly ignored:object The text to write if ignored.
- */
+var Writers = (function (_Array2) {
+  _inherits(Writers, _Array2);
+
+  /**
+   * Constructor.
+   */
+
+  function Writers() {
+    _classCallCheck(this, Writers);
+
+    _get(Object.getPrototypeOf(Writers.prototype), "constructor", this).call(this);
+  }
+
+  /**
+   * A console writer.
+   *
+   * @readonly passed:object  The text to write if passed.
+   * @readonly failed:object  The text to write if failed.
+   * @readonly ignored:object The text to write if ignored.
+   */
+
+  /**
+   * Adds a new writer.
+   *
+   * @overload One writer.
+   * @param wrt:Writer    The writer to add.
+   *
+   * @overload Several writers.
+   * @param wrts:Writer[] The writers to add.
+   */
+
+  _createClass(Writers, [{
+    key: "add",
+    value: function add(wrts) {
+      //(1) arguments
+      if (!(wrts instanceof Array)) wrts = [wrts];
+
+      //(2) add
+      for (var i = 0; i < wrts.length; ++i) {
+        this.push(wrts[i]);
+      }
+    }
+
+    /**
+     * Writes a result.
+     *
+     * @param res:Result  The result to write.
+     */
+  }, {
+    key: "write",
+    value: function write(res) {
+      for (var i = 0; i < this.length; ++i) {
+        this[i].write(res);
+      }
+    }
+  }]);
+
+  return Writers;
+})(Array);
 
 var ConsoleWriter = (function (_Writer) {
   _inherits(ConsoleWriter, _Writer);
@@ -202,12 +317,14 @@ var ConsoleWriter = (function (_Writer) {
     }
   }
 
+  //imports
+
+  /**
+   * @override
+   */
+
   _createClass(ConsoleWriter, [{
     key: "write",
-
-    /**
-     * @override
-     */
     value: function write(res) {
       var txt;
 
@@ -226,8 +343,6 @@ var ConsoleWriter = (function (_Writer) {
         console.error(indent(res.error.stack, res.level + 1));
       }
     }
-  }, {
-    key: "formatTitle",
 
     /**
      * Returns the title to display.
@@ -236,11 +351,11 @@ var ConsoleWriter = (function (_Writer) {
      * @param res:Result  The result to check.
      * @return string
      */
+  }, {
+    key: "formatTitle",
     value: function formatTitle(res) {
       return res.title;
     }
-  }, {
-    key: "formatStateText",
 
     /**
      * Returns the state text to display.
@@ -248,6 +363,8 @@ var ConsoleWriter = (function (_Writer) {
      * @param res:Result  The result to check.
      * @return string
      */
+  }, {
+    key: "formatStateText",
     value: function formatStateText(res) {
       switch (res.state) {
         case _justoResult.ResultState.PASSED:
@@ -266,8 +383,6 @@ var ConsoleWriter = (function (_Writer) {
 })(Writer);
 
 exports.ConsoleWriter = ConsoleWriter;
-
-//imports
 var colors = require("colors/safe");
 
 /**
@@ -304,23 +419,23 @@ var ColoredConsoleWriter = (function (_ConsoleWriter) {
     }
   }
 
+  /**
+   * @override
+   */
+
   _createClass(ColoredConsoleWriter, [{
     key: "formatTitle",
-
-    /**
-     * @override
-     */
     value: function formatTitle(res) {
       if (res instanceof _justoResult.SuiteResult) res = colors.white(res.title);else res = colors.gray(res.title);
 
       return res;
     }
-  }, {
-    key: "formatStateText",
 
     /**
      * @override
      */
+  }, {
+    key: "formatStateText",
     value: function formatStateText(res) {
       switch (res.state) {
         case _justoResult.ResultState.PASSED:

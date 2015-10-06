@@ -1,7 +1,6 @@
 //imports
 const jdouble = require("justo-double");
 const spy = jdouble.spy;
-const dummy = jdouble.dummy;
 const stub = jdouble.stub;
 const jresult = require("justo-result");
 const SuiteResult = jresult.SuiteResult;
@@ -15,11 +14,33 @@ const Reporter = require("../../../dist/es5/nodejs/justo-reporter").Reporter;
 //suite
 describe("Reporter", function() {
   describe("#constructor()", function() {
+    it("constructor()", function() {
+      var rep = new Reporter();
+
+      rep.must.have({
+        name: "default",
+        enabled: true,
+        writers: [],
+        display: {
+          initializers: true,
+          finalizers: true,
+          suites: true,
+          simpleTasks: true,
+          multitasks: true,
+          subtasks: true,
+          ignored: true,
+          passed: true,
+          failed: true
+        }
+      });
+    });
+
     it("constructor(name)", function() {
       var rep = new Reporter("reporter");
 
       rep.must.have({
         name: "reporter",
+        enabled: true,
         display: {
           suites: true,
           finalizers: true,
@@ -37,6 +58,7 @@ describe("Reporter", function() {
 
     it("constructor(name, opts)", function() {
       var rep = new Reporter("reporter", {
+        enabled: false,
         display: {
           initializers: false,
           finalizers: false,
@@ -52,6 +74,7 @@ describe("Reporter", function() {
 
       rep.must.have({
         name: "reporter",
+        enabled: false,
         display: {
           initializers: false,
           finalizers: false,
@@ -92,7 +115,7 @@ describe("Reporter", function() {
 
     beforeEach(function() {
       reporter = new Reporter("reporter");
-      reporter.add(writer = spy({write: dummy()}, "write()"));
+      reporter.add(writer = spy({}, "write() {}"));
     });
 
     describe("report(suite)", function() {

@@ -1,7 +1,7 @@
 {
   "name": "justo-reporter",
-  "version": "0.3.0",
-  "description": "Result reporter.",
+  "version": "0.4.0",
+  "description": "Result reporter library.",
   "homepage": "http://www.justojs.org",
   "license": "MIT",
   "author": {
@@ -18,7 +18,9 @@
   ],
   "keywords": [
     "Justo",
-    "Justo.js"
+    "Justo.js",
+    "Task",
+    "Task result reporter"
   ],
   "bugs": {
     "url": "https://github.com/justojs/justo-reporter/issues",
