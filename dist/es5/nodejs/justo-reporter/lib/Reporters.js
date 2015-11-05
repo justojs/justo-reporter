@@ -1,6 +1,3 @@
-/**
- * A collection of reporters.
- */
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18,41 +15,21 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Reporters = (function (_Array) {
   _inherits(Reporters, _Array);
 
-  /**
-   * Constructor.
-   */
-
   function Reporters() {
     _classCallCheck(this, Reporters);
 
     _get(Object.getPrototypeOf(Reporters.prototype), "constructor", this).call(this);
   }
 
-  /**
-   * Adds a new reporter.
-   *
-   * @overload One reporter.
-   * @param rep:Reporter  The reporter to add.
-   *
-   * @overload Several reporters.
-   * @param reps:Reporter[] The reporters to add.
-   */
-
   _createClass(Reporters, [{
     key: "add",
     value: function add(reps) {
-      //(1) arguments
       if (!(reps instanceof Array)) reps = [reps];
 
-      //(2) add reporters
       for (var i = 0; i < reps.length; ++i) {
         this.push(reps[i]);
       }
     }
-
-    /**
-     * Invokes the reporters's start() method.
-     */
   }, {
     key: "start",
     value: function start() {
@@ -64,7 +41,7 @@ var Reporters = (function (_Array) {
         for (var _iterator = this[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var rep = _step.value;
 
-          if (rep.enabled) rep.start.apply(rep, arguments);
+          rep.start.apply(rep, arguments);
         }
       } catch (err) {
         _didIteratorError = true;
@@ -81,13 +58,9 @@ var Reporters = (function (_Array) {
         }
       }
     }
-
-    /**
-     * Invokes the reporters's report() method.
-     */
   }, {
-    key: "report",
-    value: function report() {
+    key: "end",
+    value: function end() {
       var _iteratorNormalCompletion2 = true;
       var _didIteratorError2 = false;
       var _iteratorError2 = undefined;
@@ -96,7 +69,7 @@ var Reporters = (function (_Array) {
         for (var _iterator2 = this[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
           var rep = _step2.value;
 
-          if (rep.enabled) rep.report.apply(rep, arguments);
+          rep.end.apply(rep, arguments);
         }
       } catch (err) {
         _didIteratorError2 = true;
@@ -109,38 +82,6 @@ var Reporters = (function (_Array) {
         } finally {
           if (_didIteratorError2) {
             throw _iteratorError2;
-          }
-        }
-      }
-    }
-
-    /**
-     * Invokes the reporters's end() method.
-     */
-  }, {
-    key: "end",
-    value: function end() {
-      var _iteratorNormalCompletion3 = true;
-      var _didIteratorError3 = false;
-      var _iteratorError3 = undefined;
-
-      try {
-        for (var _iterator3 = this[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-          var rep = _step3.value;
-
-          if (rep.enabled) rep.end.apply(rep, arguments);
-        }
-      } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion3 && _iterator3["return"]) {
-            _iterator3["return"]();
-          }
-        } finally {
-          if (_didIteratorError3) {
-            throw _iteratorError3;
           }
         }
       }

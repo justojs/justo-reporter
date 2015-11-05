@@ -1,4 +1,3 @@
-//imports
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7,126 +6,145 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _justoResult = require("justo-result");
+var _Report = require("./Report");
 
-/**
- * A reporter.
- *
- * @abstract
- * @readonly name:string      The reporter name.
- * @readonly enabled:boolean  Is the reported enabled?
- * @readonly display:object   What to display.
- * @readonly writers:Writers  The writers.
- */
+var _Report2 = _interopRequireDefault(_Report);
+
+var _Result = require("./Result");
+
+var _Result2 = _interopRequireDefault(_Result);
+
+var startReport = Symbol();
+var startTask = Symbol();
+var endTask = Symbol();
+var endReport = Symbol();
 
 var Reporter = (function () {
-  /**
-   * Constructor.
-   *
-   * @param(attr) name
-   * @param [opts]:object Reporter options: enabled (boolean), display (object).
-   */
-
   function Reporter() {
-    var name = arguments.length <= 0 || arguments[0] === undefined ? "default" : arguments[0];
-    var opts = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-
     _classCallCheck(this, Reporter);
 
-    Object.defineProperty(this, "name", { value: name, enumerable: true });
-    Object.defineProperty(this, "enabled", { value: opts.hasOwnProperty("enabled") ? !!opts.enabled : true });
-    Object.defineProperty(this, "display", { enumerable: true, value: {
-        initializers: true,
-        finalizers: true,
-        suites: true,
-        multitasks: true,
-        simpleTasks: true,
-        subtasks: true,
-        ignored: true,
-        passed: true,
-        failed: true
-      } });
+    var name, opts;
 
-    if (opts.display) {
-      var d = opts.display;
-
-      if (d.hasOwnProperty("initializers")) this.display.initializers = !!d.initializers;
-      if (d.hasOwnProperty("finalizers")) this.display.finalizers = !!d.finalizers;
-      if (d.hasOwnProperty("suites")) this.display.suites = !!d.suites;
-      if (d.hasOwnProperty("multitasks")) this.display.multitasks = !!d.multitasks;
-      if (d.hasOwnProperty("simpleTasks")) this.display.simpleTasks = !!d.simpleTasks;
-      if (d.hasOwnProperty("subtasks")) this.display.subtasks = !!d.subtasks;
-      if (d.hasOwnProperty("ignored")) this.display.ignored = !!d.ignored;
-      if (d.hasOwnProperty("passed")) this.display.passed = !!d.passed;
-      if (d.hasOwnProperty("failed")) this.display.failed = !!d.failed;
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
     }
-  }
 
-  /**
-   * Starts the report or starts a composite task result.
-   *
-   * @overload Starts the report.
-   * @noparam
-   *
-   * @overload Starts a composite task result.
-   * @param result:CompositeTaskResult  The composite result.
-   */
+    if (args.length == 1) {
+      if (typeof args[0] == "string") name = args[0];else opts = args[0];
+    } else if (args.length >= 2) {
+      name = args[0];
+      opts = args[1];
+    }
+
+    if (!opts) opts = {};
+
+    Object.defineProperty(this, "name", { value: name || "reporter", enumerable: true });
+    Object.defineProperty(this, "enabled", { value: opts.hasOwnProperty("enabled") ? !!opts.enabled : true, enumerable: true });
+    Object.defineProperty(this, "stack", { value: [] });
+    Object.defineProperty(this, "report", { value: undefined, writable: true });
+  }
 
   _createClass(Reporter, [{
     key: "start",
     value: function start() {
-      throw new Error("Abstract method.");
-    }
+      if (this.disabled) return;
 
-    /**
-     * Ends the report or ends a composite task result.
-     * If some result is pending, this ends the result; otherwise,
-     * it ends the report.
-     */
+      for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
+      }
+
+      if (args.length === 0) this[startReport]();else this[startTask].apply(this, args);
+    }
+  }, {
+    key: startReport,
+    value: function value() {
+      if (this.stack.length) {
+        throw new Error("Invalid start of report. There're tasks.");
+      } else {
+        if (this.started) {
+          throw new Error("Report already started.");
+        } else {
+          this.report = new _Report2["default"]();
+          this.startReport();
+        }
+      }
+    }
+  }, {
+    key: "startReport",
+    value: function startReport() {}
+  }, {
+    key: startTask,
+    value: function value(title, task) {
+      if (!task) {
+        throw new Error("Invalid number of arguments. Expected title and task. Only one received.");
+      }
+
+      if (!this.started) this.start();
+      this.stack.push({ title: title, task: task });
+
+      this.startTask(title, task);
+    }
+  }, {
+    key: "startTask",
+    value: function startTask(title, task) {}
   }, {
     key: "end",
     value: function end() {
-      throw new Error("Abstract method.");
+      if (this.disabled) return;
+
+      for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+        args[_key3] = arguments[_key3];
+      }
+
+      if (args.length === 0) this[endReport]();else this[endTask].apply(this, args);
     }
-
-    /**
-     * Receives a result for reporting.
-     *
-     * @param res:Result  The result to report.
-     */
   }, {
-    key: "report",
-    value: function report(res) {
-      var rep = true;
+    key: endReport,
+    value: function value() {
+      if (this.stack.length > 0) {
+        throw new Error("Invalid end of report. There're active tasks.");
+      }
 
-      //(0) pre: enabled?
-      if (!this.enabled) return;
-
-      //(1) check constraints
-      if (res instanceof _justoResult.SuiteResult && !this.display.suites) rep = false;
-      if (res instanceof _justoResult.InitializerResult && !this.display.initializers) rep = false;
-      if (res instanceof _justoResult.FinalizerResult && !this.display.finalizers) rep = false;
-      if (res instanceof _justoResult.SimpleTaskResult && !this.display.simpleTasks) rep = false;
-      if (res instanceof MultitaskResult && !this.display.multitasks) rep = false;
-      if (res.state === _justoResult.ResultState.IGNORED && !this.display.ignored) rep = false;
-      if (res.state === _justoResult.ResultState.PASSED && !this.display.passed) rep = false;
-      if (res.state === _justoResult.ResultState.FAILED && !this.display.failed) rep = false;
-
-      //(2) notify writers
-      if (rep) this.write(res);
+      this.endReport();
+      this.report = undefined;
     }
-
-    /**
-     * Writes the result.
-     *
-     * @protected
-     */
   }, {
-    key: "write",
-    value: function write(res) {
-      //to override by the subclasses
+    key: "endReport",
+    value: function endReport() {}
+  }, {
+    key: endTask,
+    value: function value(task, result, error, start, end) {
+      var item, res;
+
+      if (arguments.length == 1) {
+        throw new Error("Invalid number of arguents. Expected, at least, task and result.");
+      }
+
+      item = this.stack.pop();
+
+      if (item.task !== task) {
+        throw new Error("Invalid end of task. Another task must be ended firstly.");
+      }
+
+      this.report.add(res = new _Result2["default"](item.title, task, result, error, start, end));
+      this.endTask(res);
+    }
+  }, {
+    key: "endTask",
+    value: function endTask(res) {}
+  }, {
+    key: "started",
+    get: function get() {
+      return !!this.report;
+    }
+  }, {
+    key: "disabled",
+    get: function get() {
+      return !this.enabled;
     }
   }]);
 

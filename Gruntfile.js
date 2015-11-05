@@ -10,13 +10,18 @@ module.exports = function(grunt) {
     babel: {
       options: {
         sourceMap: false,
+        comments: false
       },
 
       es5: {
         files: {
         	"build/es5/lib/index.js": "lib/index.js",
+          "build/es5/lib/Report.js": "lib/Report.js",
           "build/es5/lib/Reporter.js": "lib/Reporter.js",
-          "build/es5/lib/Reporters.js": "lib/Reporters.js"
+          "build/es5/lib/Reporters.js": "lib/Reporters.js",
+          "build/es5/lib/Result.js": "lib/Result.js",
+          "build/es5/lib/reporter/ConsoleReporter.js": "lib/reporter/ConsoleReporter.js",
+          "build/es5/lib/reporter/ColoredConsoleReporter.js": "lib/reporter/ColoredConsoleReporter.js"
         }
       }
     },
@@ -30,7 +35,7 @@ module.exports = function(grunt) {
     copy: {
     	nodejs: {
     		files: [
-    		  {cwd: "build/es5/", src: ["lib/*.js"], dest: "dist/es5/nodejs/<%= pkg.name %>/", expand: true},
+    		  {cwd: "build/es5/", src: ["lib/*.js", "lib/reporter/*.js"], dest: "dist/es5/nodejs/<%= pkg.name %>/", expand: true},
     		  {src: ["package.json", "README.md"], dest: "dist/es5/nodejs/<%= pkg.name %>/", expand: true},
     		  {src: ["test/**/*.*"], dest: "dist/es5/nodejs/<%= pkg.name %>", expand: true}
     		]

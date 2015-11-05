@@ -21,124 +21,79 @@ describe("Reporters", function() {
   });
 
   describe("#start()", function() {
-    var rr, rep1, rep2, rep3;
-
-    describe("All enabled reporters", function() {
-      beforeEach(function() {
-        rr = new Reporters();
-
-        rr.add(rep1 = spy(new Reporter(), "start() {}"));
-        rr.add(rep2 = spy(new Reporter(), "start() {}"));
-        rr.add(rep3 = spy(new Reporter(), "start() {}"));
-      });
-
-      it("start()", function() {
-        //(1) start
-        rr.start();
-
-        //(2) check
-        rep1.spy.called("start()").must.be.eq(1);
-        rep2.spy.called("start()").must.be.eq(1);
-        rep3.spy.called("start()").must.be.eq(1);
-      });
-
-      it("start(Result)", function() {
-        var res = {};
-
-        //(1) start
-        rr.start(res);
-
-        //(2) check
-        rep1.spy.alwaysCalledWith("start()", [res]).must.be.eq(1);
-        rep2.spy.alwaysCalledWith("start()", [res]).must.be.eq(1);
-        rep3.spy.alwaysCalledWith("start()", [res]).must.be.eq(1);
-      });
-    });
-  });
-
-  describe("#report()", function() {
-    var rr, rep1, rep2, rep3;
+    var reps, rep1, rep2;
 
     beforeEach(function() {
-      rr = new Reporters();
+      reps = new Reporters();
+      reps.add(rep1 = spy(new Reporter(), "start() {}"));
+      reps.add(rep2 = spy(new Reporter(), "start() {}"));
     });
 
-    it("All enabled reporters", function() {
-      //(1) init
-      rr.add(rep1 = spy(new Reporter(), "report() {}"));
-      rr.add(rep2 = spy(new Reporter(), "report() {}"));
-      rr.add(rep3 = spy(new Reporter(), "report() {}"));
-
-      //(2) report
-      rr.report("The result");
-
-      //(3) check
-      rep1.spy.called("report()").must.be.eq(1);
-      rep2.spy.called("report()").must.be.eq(1);
-      rep3.spy.called("report()").must.be.eq(1);
+    it("start() - start of report", function() {
+      reps.start();
+      rep1.spy.called("start()").must.be.eq(1);
+      rep1.spy.getCall("start()").arguments.must.be.eq([]);
+      rep2.spy.called("start()").must.be.eq(1);
+      rep2.spy.getCall("start()").arguments.must.be.eq([]);
     });
 
-    it("Not all enabled reporters", function() {
-      //(1) init
-      rr.add(rep1 = spy(new Reporter("enabled"), "report() {}"));
-      rr.add(rep2 = spy(new Reporter("disabled", {enabled: false}), "report() {}"));
-      rr.add(rep3 = spy(new Reporter("enabled"), "report() {}"));
+    it("start() - start of task", function() {
+      reps.start("title", {});
+      rep1.spy.called("start()").must.be.eq(1);
+      rep1.spy.getCall("start()").arguments.must.be.eq(["title", {}]);
+      rep2.spy.called("start()").must.be.eq(1);
+      rep2.spy.getCall("start()").arguments.must.be.eq(["title", {}]);
+    });
 
-      //(2) report
-      rr.report("The result");
-
-      //(3) check
-      rep1.spy.called("report()").must.be.eq(1);
-      rep2.spy.called("report()").must.be.eq(0);
-      rep3.spy.called("report()").must.be.eq(1);
+    it("start() - start of two tasks", function() {
+      reps.start("one", {});
+      reps.start("two", {});
+      rep1.spy.called("start()").must.be.eq(2);
+      rep1.spy.getCall("start()", 0).arguments.must.be.eq(["one", {}]);
+      rep1.spy.getCall("start()", 1).arguments.must.be.eq(["two", {}]);
+      rep2.spy.called("start()").must.be.eq(2);
+      rep2.spy.getCall("start()", 0).arguments.must.be.eq(["one", {}]);
+      rep2.spy.getCall("start()", 1).arguments.must.be.eq(["two", {}]);
     });
   });
 
   describe("#end()", function() {
-    var rr, rep1, rep2, rep3;
+    var reps, rep1, rep2;
 
-    describe("All enabled reporters", function() {
-      beforeEach(function() {
-        rr = new Reporters();
-
-        rr.add(rep1 = spy(new Reporter(), "end() {}"));
-        rr.add(rep2 = spy(new Reporter(), "end() {}"));
-        rr.add(rep3 = spy(new Reporter(), "end() {}"));
-      });
-
-      it("end()", function() {
-        //(1) start
-        rr.end();
-
-        //(2) check
-        rep1.spy.called("end()").must.be.eq(1);
-        rep2.spy.called("end()").must.be.eq(1);
-        rep3.spy.called("end()").must.be.eq(1);
-      });
+    beforeEach(function() {
+      reps = new Reporters();
+      reps.add(rep1 = spy(new Reporter(), "end() {}"));
+      reps.add(rep2 = spy(new Reporter(), "end() {}"));
     });
 
-    describe("Some disabled", function() {
-      var rr, rep1, rep2, rep3;
+    it("end() - start of report", function() {
+      reps.end();
+      rep1.spy.called("end()").must.be.eq(1);
+      rep1.spy.getCall("end()").arguments.must.be.eq([]);
+      rep2.spy.called("end()").must.be.eq(1);
+      rep2.spy.getCall("end()").arguments.must.be.eq([]);
+    });
 
-      describe("All enabled reporters", function() {
-        beforeEach(function() {
-          rr = new Reporters();
+    it("end() - end of task", function() {
+      reps.start("test", {});
+      reps.end({}, "ok");
+      rep1.spy.called("end()").must.be.eq(1);
+      rep1.spy.getCall("end()").arguments.must.be.eq([{}, "ok"]);
+      rep2.spy.called("end()").must.be.eq(1);
+      rep2.spy.getCall("end()").arguments.must.be.eq([{}, "ok"]);
+    });
 
-          rr.add(rep1 = spy(new Reporter("enabled"), "end() {}"));
-          rr.add(rep2 = spy(new Reporter("disabled", {enabled: false}), "end() {}"));
-          rr.add(rep3 = spy(new Reporter("enabled"), "end() {}"));
-        });
-
-        it("end()", function() {
-          //(1) start
-          rr.end();
-
-          //(2) check
-          rep1.spy.called("end()").must.be.eq(1);
-          rep2.spy.called("end()").must.be.eq(0);
-          rep3.spy.called("end()").must.be.eq(1);
-        });
-      });
+    it("end() - end of two tasks", function() {
+      reps.start("one", {});
+      reps.start("two", {});
+      reps.end({}, "ok");
+      reps.end({}, "ok");
+      rep1.spy.called("end()").must.be.eq(2);
+      rep1.spy.getCall("end()", 0).arguments.must.be.eq([{}, "ok"]);
+      rep1.spy.getCall("end()", 1).arguments.must.be.eq([{}, "ok"]);
+      rep2.spy.called("end()").must.be.eq(2);
+      rep2.spy.getCall("end()", 0).arguments.must.be.eq([{}, "ok"]);
+      rep2.spy.getCall("end()", 1).arguments.must.be.eq([{}, "ok"]);
     });
   });
 });
