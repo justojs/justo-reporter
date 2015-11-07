@@ -1,6 +1,6 @@
 {
   "name": "justo-reporter",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Result reporter library.",
   "homepage": "http://www.justojs.org",
   "license": "MIT",

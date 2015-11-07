@@ -45,37 +45,33 @@ var Reporter = (function () {
     Object.defineProperty(this, "name", { value: name || "reporter", enumerable: true });
     Object.defineProperty(this, "enabled", { value: opts.hasOwnProperty("enabled") ? !!opts.enabled : true, enumerable: true });
     Object.defineProperty(this, "stack", { value: [] });
-    Object.defineProperty(this, "report", { value: undefined, writable: true });
+    Object.defineProperty(this, "_report", { value: undefined, writable: true });
   }
 
   _createClass(Reporter, [{
     key: "start",
-    value: function start() {
+    value: function start(title, task) {
       if (this.disabled) return;
 
-      for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        args[_key2] = arguments[_key2];
-      }
-
-      if (args.length === 0) this[startReport]();else this[startTask].apply(this, args);
+      if (arguments.length === 0) throw new Error("Invalid number of arguments. Expected at least one.");else if (arguments.length === 1) this[startReport](title);else this[startTask](title, task);
     }
   }, {
     key: startReport,
-    value: function value() {
+    value: function value(title) {
       if (this.stack.length) {
         throw new Error("Invalid start of report. There're tasks.");
       } else {
         if (this.started) {
           throw new Error("Report already started.");
         } else {
-          this.report = new _Report2["default"]();
-          this.startReport();
+          this._report = new _Report2["default"](title);
+          this.startReport(title);
         }
       }
     }
   }, {
     key: "startReport",
-    value: function startReport() {}
+    value: function startReport(title) {}
   }, {
     key: startTask,
     value: function value(title, task) {
@@ -83,7 +79,10 @@ var Reporter = (function () {
         throw new Error("Invalid number of arguments. Expected title and task. Only one received.");
       }
 
-      if (!this.started) this.start();
+      if (!this.started) {
+        throw new Error("No report started.");
+      }
+
       this.stack.push({ title: title, task: task });
 
       this.startTask(title, task);
@@ -96,8 +95,8 @@ var Reporter = (function () {
     value: function end() {
       if (this.disabled) return;
 
-      for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-        args[_key3] = arguments[_key3];
+      for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
       }
 
       if (args.length === 0) this[endReport]();else this[endTask].apply(this, args);
@@ -105,12 +104,16 @@ var Reporter = (function () {
   }, {
     key: endReport,
     value: function value() {
+      if (!this.started) {
+        throw new Error("Invalid end of report. No report started.");
+      }
+
       if (this.stack.length > 0) {
         throw new Error("Invalid end of report. There're active tasks.");
       }
 
       this.endReport();
-      this.report = undefined;
+      this._report = undefined;
     }
   }, {
     key: "endReport",
@@ -136,6 +139,11 @@ var Reporter = (function () {
   }, {
     key: "endTask",
     value: function endTask(res) {}
+  }, {
+    key: "report",
+    get: function get() {
+      return this._report;
+    }
   }, {
     key: "started",
     get: function get() {

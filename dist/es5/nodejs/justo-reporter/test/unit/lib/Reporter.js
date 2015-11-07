@@ -61,35 +61,37 @@ describe("Reporter", function() {
       rep = spy(new Reporter(), ["startReport() {}", "startTask()"]);
     });
 
-    it("start() - start of report", function() {
-      rep.start();
-      rep.started.must.be.eq(true);
-      rep.spy.called("startReport()").must.be.eq(1);
-      rep.spy.getCall("startReport()").arguments.must.be.eq([]);
-      rep.spy.called("startTask()").must.be.eq(0);
+    describe("Start of report", function() {
+      it("start(title) - start of report", function() {
+        rep.start("Test report");
+        rep.started.must.be.eq(true);
+        rep.spy.called("startReport()").must.be.eq(1);
+        rep.spy.calledWith("startReport()", ["Test report"]).must.be.eq(1);
+        rep.spy.called("startTask()").must.be.eq(0);
+      });
+
+      it("start() - start of report with active tasks", function() {
+        rep.start("Test report");
+        rep.start("test", {});
+        rep.started.must.be.eq(true);
+        rep.start.bind(rep, "New test report").must.raise("Invalid start of report. There're tasks.");
+        rep.stack.length.must.be.eq(1);
+        rep.spy.called("startReport()").must.be.eq(1);
+        rep.spy.called("startTask()").must.be.eq(1);
+      });
     });
 
-    it("start(title)", function() {
-      rep.start.bind(rep, "title").must.raise("Invalid number of arguments. Expected title and task. Only one received.");
-    });
-
-    it("start(title, task) - start of task", function() {
-      rep.start("test", {});
-      rep.started.must.be.eq(true);
-      rep.stack.length.must.be.eq(1);
-      rep.spy.called("startReport()").must.be.eq(1);
-      rep.spy.getCall("startReport()").arguments.must.be.eq([]);
-      rep.spy.called("startTask()").must.be.eq(1);
-      rep.spy.getCall("startTask()").arguments.must.be.eq(["test", {}]);
-    });
-
-    it("start() - start of report with active tasks", function() {
-      rep.start("test", {});
-      rep.started.must.be.eq(true);
-      rep.start.bind(rep).must.raise("Invalid start of report. There're tasks.");
-      rep.stack.length.must.be.eq(1);
-      rep.spy.called("startReport()").must.be.eq(1);
-      rep.spy.called("startTask()").must.be.eq(1);
+    describe("Start of task", function() {
+      it("start(title, task) - start of task", function() {
+        rep.start("Test report");
+        rep.start("test", {});
+        rep.started.must.be.eq(true);
+        rep.stack.length.must.be.eq(1);
+        rep.spy.called("startReport()").must.be.eq(1);
+        rep.spy.calledWith("startReport()", ["Test report"]).must.be.eq(1);
+        rep.spy.called("startTask()").must.be.eq(1);
+        rep.spy.calledWith("startTask()", ["test", {}]).must.be.eq(1);
+      });
     });
   });
 
@@ -102,20 +104,25 @@ describe("Reporter", function() {
 
     describe("End of report", function() {
       it("end()", function() {
-        rep.start();
+        rep.start("Test report");
         rep.end();
 
         rep.started.must.be.eq(false);
         rep.stack.length.must.be.eq(0);
         rep.spy.called("endReport()").must.be.eq(1);
-        rep.spy.getCall("endReport()").arguments.must.be.eq([]);
+        rep.spy.calledWith("endReport()", []).must.be.eq(1);
         rep.spy.called("endTask()").must.be.eq(0);
       });
 
       it("end() - end of report with active tasks", function() {
+        rep.start("Test report");
         rep.start("test1", {});
         rep.stack.length.must.be.eq(1);
         rep.end.bind(rep).must.raise("Invalid end of report. There're active tasks.");
+      });
+
+      it("end() - end of report with no report started", function() {
+        rep.end.bind(rep).must.raise("Invalid end of report. No report started.");
       });
     });
 
@@ -123,7 +130,7 @@ describe("Reporter", function() {
       it("end(task) - forgot result", function() {
         var task = {};
 
-        rep.start();
+        rep.start("Test report");
         rep.start("test", task);
         rep.end.bind(rep, task).must.raise("Invalid number of arguents. Expected, at least, task and result.");
         rep.stack.length.must.be.eq(1);
@@ -134,6 +141,7 @@ describe("Reporter", function() {
       it("end(task, result) - none ended", function() {
         var task1 = {}, task2 = {};
 
+        rep.start("Test report");
         rep.start("test1", task1);
         rep.start("test2", task2);
         rep.end.bind(rep, task1, "ok").must.raise("Invalid end of task. Another task must be ended firstly.");
@@ -142,7 +150,7 @@ describe("Reporter", function() {
       it("end(task, result) - one ended", function() {
         var task = {};
 
-        rep.start();
+        rep.start("Test report");
         rep.start("test", task);
         rep.end(task, "ok", undefined, Date.now(), Date.now());
 
@@ -153,7 +161,7 @@ describe("Reporter", function() {
         rep.report.ignored.length.must.be.eq(0);
         rep.spy.called("endReport()").must.be.eq(0);
         rep.spy.called("endTask()").must.be.eq(1);
-        rep.spy.getCall("endTask()").arguments[0].must.have({
+        rep.spy.getArguments("endTask()")[0].must.have({
           title: "test",
           task: task,
           result: "ok",
@@ -164,7 +172,7 @@ describe("Reporter", function() {
       it("end(task, result) - several ones ended", function() {
         var task1 = {}, task2 = {};
 
-        rep.start();
+        rep.start("Test report");
         rep.start("test1", task1);
         rep.start("test2", task2);
         rep.end(task2, "ok");
@@ -177,13 +185,13 @@ describe("Reporter", function() {
         rep.report.ignored.length.must.be.eq(0);
         rep.spy.called("endReport()").must.be.eq(0);
         rep.spy.called("endTask()").must.be.eq(2);
-        rep.spy.getCall("endTask()", 0).arguments[0].must.have({
+        rep.spy.getArguments("endTask()", 0)[0].must.have({
           title: "test2",
           task: task2,
           result: "ok",
           error: undefined
         });
-        rep.spy.getCall("endTask()", 1).arguments[0].must.have({
+        rep.spy.getArguments("endTask()", 1)[0].must.have({
           title: "test1",
           task: task1,
           result: "ok",
@@ -194,7 +202,7 @@ describe("Reporter", function() {
       it("end(task, result) - several ones ended with different results", function() {
         var task1 = {}, task2 ={}, task3 = {}, task4 = {}, task5 = {}, task6 = {}, task7 = {};
 
-        rep.start();
+        rep.start("Test report");
         rep.start("test1", task1);
         rep.start("test2", task2);
         rep.start("test3", task3);

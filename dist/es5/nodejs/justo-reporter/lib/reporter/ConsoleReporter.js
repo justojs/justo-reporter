@@ -52,6 +52,11 @@ var ConsoleReporter = (function (_Reporter) {
   }
 
   _createClass(ConsoleReporter, [{
+    key: "startReport",
+    value: function startReport(title) {
+      this.println(title);
+    }
+  }, {
     key: "startTask",
     value: function startTask(title, task) {
       this.print(title);

@@ -86,12 +86,17 @@ describe("ColoredConsoleReporter", function() {
     });
 
     it("endTask()", function() {
+      rep.start("Test report");
       rep.start("test", task);
+
       rep.end(task, "ok", undefined, Date.now(), Date.now() + 10);
+
       rep.spy.called("endTask()").must.be.eq(1);
-      rep.spy.called("print()").must.be.eq(1);  //by start()
-      rep.spy.called("println()").must.be.eq(1);
-      rep.spy.getCall("println()").arguments[0].must.match(/^ .+V.+ \([0-9]+ ms\)$/);
+      rep.spy.called("println()").must.be.eq(2);
+      rep.spy.called("print()").must.be.eq(1);
+      rep.spy.getArguments("println()", 0).must.be.eq(["Test report"]);
+      rep.spy.getArguments("print()").must.be.eq(["test"]);
+      rep.spy.getArguments("println()", 1)[0].must.match(/^ .+V.+ \([0-9]+ ms\)$/);
     });
   });
 });

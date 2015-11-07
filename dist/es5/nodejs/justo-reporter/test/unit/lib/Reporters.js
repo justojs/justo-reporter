@@ -30,11 +30,11 @@ describe("Reporters", function() {
     });
 
     it("start() - start of report", function() {
-      reps.start();
+      reps.start("Test report");
       rep1.spy.called("start()").must.be.eq(1);
-      rep1.spy.getCall("start()").arguments.must.be.eq([]);
+      rep1.spy.getCall("start()").arguments.must.be.eq(["Test report"]);
       rep2.spy.called("start()").must.be.eq(1);
-      rep2.spy.getCall("start()").arguments.must.be.eq([]);
+      rep2.spy.getCall("start()").arguments.must.be.eq(["Test report"]);
     });
 
     it("start() - start of task", function() {
@@ -66,7 +66,7 @@ describe("Reporters", function() {
       reps.add(rep2 = spy(new Reporter(), "end() {}"));
     });
 
-    it("end() - start of report", function() {
+    it("end() - end of report", function() {
       reps.end();
       rep1.spy.called("end()").must.be.eq(1);
       rep1.spy.getCall("end()").arguments.must.be.eq([]);
@@ -75,6 +75,7 @@ describe("Reporters", function() {
     });
 
     it("end() - end of task", function() {
+      reps.start("Test report");
       reps.start("test", {});
       reps.end({}, "ok");
       rep1.spy.called("end()").must.be.eq(1);
@@ -84,6 +85,7 @@ describe("Reporters", function() {
     });
 
     it("end() - end of two tasks", function() {
+      reps.start("Test report");
       reps.start("one", {});
       reps.start("two", {});
       reps.end({}, "ok");

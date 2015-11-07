@@ -9,9 +9,10 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Report = (function () {
-  function Report() {
+  function Report(title) {
     _classCallCheck(this, Report);
 
+    Object.defineProperty(this, "title", { value: title, enumerable: true });
     Object.defineProperty(this, "results", { value: [] });
   }
 
