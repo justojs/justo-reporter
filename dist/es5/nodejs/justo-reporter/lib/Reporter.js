@@ -25,24 +25,14 @@ var endReport = Symbol();
 
 var Reporter = (function () {
   function Reporter() {
+    var opts = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
     _classCallCheck(this, Reporter);
 
-    var name, opts;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    if (args.length == 1) {
-      if (typeof args[0] == "string") name = args[0];else opts = args[0];
-    } else if (args.length >= 2) {
-      name = args[0];
-      opts = args[1];
-    }
-
+    if (typeof opts == "string") opts = { name: opts };
     if (!opts) opts = {};
 
-    Object.defineProperty(this, "name", { value: name || "reporter", enumerable: true });
+    Object.defineProperty(this, "name", { value: opts.name || "reporter", enumerable: true });
     Object.defineProperty(this, "enabled", { value: opts.hasOwnProperty("enabled") ? !!opts.enabled : true, enumerable: true });
     Object.defineProperty(this, "stack", { value: [] });
     Object.defineProperty(this, "_report", { value: undefined, writable: true });
@@ -95,8 +85,8 @@ var Reporter = (function () {
     value: function end() {
       if (this.disabled) return;
 
-      for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        args[_key2] = arguments[_key2];
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
       }
 
       if (args.length === 0) this[endReport]();else this[endTask].apply(this, args);

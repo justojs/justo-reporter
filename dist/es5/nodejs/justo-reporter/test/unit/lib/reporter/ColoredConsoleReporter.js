@@ -19,8 +19,33 @@ describe("ColoredConsoleReporter", function() {
       });
     });
 
+    it("constructor(undefined)", function() {
+      var rep = new ColoredConsoleReporter(undefined);
+
+      rep.must.have({
+        name: "reporter",
+        enabled: true,
+        disabled: false,
+        stack: [],
+        theme: DEFAULT_THEME
+      });
+    });
+
+    it("constructor(null)", function() {
+      var rep = new ColoredConsoleReporter(null);
+
+      rep.must.have({
+        name: "reporter",
+        enabled: true,
+        disabled: false,
+        stack: [],
+        theme: DEFAULT_THEME
+      });
+    });
+
     it("constructor(name)", function() {
       var rep = new ColoredConsoleReporter("test");
+
       rep.must.have({
         name: "test",
         enabled: true,
@@ -56,41 +81,6 @@ describe("ColoredConsoleReporter", function() {
               ok: {text: "OK", color: "black"},
               failed: {text: "FAILED", color: "blue"},
               ignored: {text: "IGNORED", color: "blue"}
-            }
-          }
-        }
-      });
-    });
-
-    it("constructor(name, opts)", function() {
-      var rep = new ColoredConsoleReporter(
-        "test",
-        {
-          enabled: false,
-          theme: {
-            task: {
-              result: {
-                ok: {text: "OK", color: "black"},
-                failed: {text: "FAILED", color: "black"},
-                ignored: {text: "IGNORED", color: "black"}
-              }
-            }
-          }
-        }
-      );
-
-      rep.must.have({
-        name: "test",
-        enabled: false,
-        disabled: true,
-        stack: [],
-        theme: {
-          report: DEFAULT_THEME.report,
-          task: {
-            result: {
-              ok: {text: "OK", color: "black"},
-              failed: {text: "FAILED", color: "black"},
-              ignored: {text: "IGNORED", color: "black"}
             }
           }
         }

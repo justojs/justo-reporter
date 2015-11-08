@@ -7,6 +7,33 @@ describe("Reporter", function() {
   describe("#constructor()", function() {
     it("constructor()", function() {
       var rep = new Reporter();
+
+      rep.must.have({
+        name: "reporter",
+        enabled: true,
+        disabled: false,
+        stack: [],
+        report: undefined,
+        started: false
+      });
+    });
+
+    it("constructor(undefined)", function() {
+      var rep = new Reporter(undefined);
+
+      rep.must.have({
+        name: "reporter",
+        enabled: true,
+        disabled: false,
+        stack: [],
+        report: undefined,
+        started: false
+      });
+    });
+
+    it("constructor(null)", function() {
+      var rep = new Reporter(null);
+
       rep.must.have({
         name: "reporter",
         enabled: true,
@@ -19,6 +46,7 @@ describe("Reporter", function() {
 
     it("constructor(name)", function() {
       var rep = new Reporter("test");
+
       rep.must.have({
         name: "test",
         enabled: true,
@@ -31,20 +59,9 @@ describe("Reporter", function() {
 
     it("constructor(opts)", function() {
       var rep = new Reporter({enabled: false});
+
       rep.must.have({
         name: "reporter",
-        enabled: false,
-        disabled: true,
-        stack: [],
-        report: undefined,
-        started: false
-      });
-    });
-
-    it("constructor(name, opts)", function() {
-      var rep = new Reporter("test", {enabled: false});
-      rep.must.have({
-        name: "test",
         enabled: false,
         disabled: true,
         stack: [],

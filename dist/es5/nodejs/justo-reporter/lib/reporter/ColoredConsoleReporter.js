@@ -39,11 +39,11 @@ var DEFAULT_THEME = {
     },
     footer: {
       pre: {
-        text: "---",
+        text: "---\n",
         color: "yellow"
       },
       post: {
-        text: "---",
+        text: "---\n",
         color: "yellow"
       }
     }
@@ -81,11 +81,7 @@ var ColoredConsoleReporter = (function (_ConsoleReporter) {
   function ColoredConsoleReporter() {
     _classCallCheck(this, ColoredConsoleReporter);
 
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    _get(Object.getPrototypeOf(ColoredConsoleReporter.prototype), "constructor", this).apply(this, args);
+    _get(Object.getPrototypeOf(ColoredConsoleReporter.prototype), "constructor", this).apply(this, arguments);
   }
 
   _createClass(ColoredConsoleReporter, [{

@@ -9,6 +9,31 @@ describe("ConsoleReporter", function() {
 
     it("constructor()", function() {
       var rep = new ConsoleReporter();
+
+      rep.must.have({
+        name: "reporter",
+        enabled: true,
+        disabled: false,
+        stack: [],
+        theme: DEFAULT_THEME
+      });
+    });
+
+    it("constructor(undefined)", function() {
+      var rep = new ConsoleReporter(undefined);
+
+      rep.must.have({
+        name: "reporter",
+        enabled: true,
+        disabled: false,
+        stack: [],
+        theme: DEFAULT_THEME
+      });
+    });
+
+    it("constructor(null)", function() {
+      var rep = new ConsoleReporter(null);
+
       rep.must.have({
         name: "reporter",
         enabled: true,
@@ -20,6 +45,7 @@ describe("ConsoleReporter", function() {
 
     it("constructor(name)", function() {
       var rep = new ConsoleReporter("test");
+
       rep.must.have({
         name: "test",
         enabled: true,
@@ -121,42 +147,6 @@ describe("ConsoleReporter", function() {
               ignored: DEFAULT_THEME.task.result.ignored
             }
           }
-        }
-      });
-    });
-
-    it("constructor(name, opts)", function() {
-      var rep = new ConsoleReporter(
-        "test",
-        {
-          enabled: false,
-          theme: {
-            report: {
-              footer: {
-                pre: {
-                  text: "---"
-                }
-              }
-            }
-          }
-        }
-      );
-      rep.must.have({
-        name: "test",
-        enabled: false,
-        disabled: true,
-        stack: [],
-        theme: {
-          report: {
-            header: DEFAULT_THEME.report.header,
-            footer: {
-              pre: {
-                text: "---"
-              },
-              post: DEFAULT_THEME.report.footer.post
-            }
-          },
-          task: DEFAULT_THEME.task
         }
       });
     });
