@@ -19,14 +19,41 @@ var _Reporter2 = require("../Reporter");
 var _Reporter3 = _interopRequireDefault(_Reporter2);
 
 var DEFAULT_THEME = {
-  ok: {
-    text: "V"
+  report: {
+    header: {
+      pre: {
+        text: "■ "
+      },
+      post: {
+        text: ""
+      }
+    },
+    footer: {
+      pre: {
+        text: "---\n"
+      },
+      post: {
+        text: "---\n"
+      }
+    }
   },
-  failed: {
-    text: "X"
-  },
-  ignored: {
-    text: "#"
+  task: {
+    header: {
+      pre: {
+        text: "♦ "
+      }
+    },
+    result: {
+      ok: {
+        text: "✓"
+      },
+      failed: {
+        text: "✗"
+      },
+      ignored: {
+        text: "#"
+      }
+    }
   }
 };
 
@@ -36,7 +63,7 @@ var ConsoleReporter = (function (_Reporter) {
   function ConsoleReporter() {
     _classCallCheck(this, ConsoleReporter);
 
-    var opts = {};
+    var opts;
 
     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
@@ -44,44 +71,102 @@ var ConsoleReporter = (function (_Reporter) {
 
     _get(Object.getPrototypeOf(ConsoleReporter.prototype), "constructor", this).apply(this, args);
 
-    if (args.length == 1 && typeof args[0] == "object") opts = args[0];else if (args.length >= 2) opts = args[1];
+    if (args.length == 1) {
+      if (typeof args[0] == "object") opts = args[0];
+    } else if (args.length >= 2) {
+      opts = args[1];
+    }
+
+    if (!opts) opts = {};
 
     Object.defineProperty(this, "print", { value: process.stdout.write.bind(process.stdout), writable: true });
     Object.defineProperty(this, "println", { value: console.log, writable: true });
-    Object.defineProperty(this, "theme", { value: Object.assign({}, DEFAULT_THEME, opts.theme), enumerable: true });
+    this.initTheme(opts.theme);
   }
 
   _createClass(ConsoleReporter, [{
+    key: "initTheme",
+    value: function initTheme(theme) {
+      Object.defineProperty(this, "theme", { value: Object.assign({}, DEFAULT_THEME, theme), enumerable: true });
+
+      if (theme) {
+        if (theme.report) {
+          var report = theme.report;
+
+          this.theme.report.header = Object.assign({}, DEFAULT_THEME.report.header, report.header);
+          this.theme.report.footer = Object.assign({}, DEFAULT_THEME.report.footer, report.footer);
+
+          if (report.header) {
+            this.theme.report.header.pre = Object.assign({}, DEFAULT_THEME.report.header.pre, report.header.pre);
+            this.theme.report.header.post = Object.assign({}, DEFAULT_THEME.report.header.post, report.header.post);
+          }
+
+          if (report.footer) {
+            this.theme.report.footer.pre = Object.assign({}, DEFAULT_THEME.report.footer.pre, report.footer.pre);
+            this.theme.report.footer.post = Object.assign({}, DEFAULT_THEME.report.footer.post, report.footer.post);
+          }
+        }
+
+        if (theme.task) {
+          var task = theme.task;
+
+          if (task.header) {
+            this.theme.task.header = Object.assign({}, DEFAULT_THEME.task.header, task.header);
+            this.theme.task.header.pre = Object.assign({}, DEFAULT_THEME.task.header.pre, task.header.pre);
+          }
+
+          if (task.result) {
+            this.theme.task.result = Object.assign({}, DEFAULT_THEME.task.result, task.result);
+            this.theme.task.result.ok = Object.assign({}, DEFAULT_THEME.task.result.ok, task.result.ok);
+            this.theme.task.result.failed = Object.assign({}, DEFAULT_THEME.task.result.failed, task.result.failed);
+            this.theme.task.result.ignored = Object.assign({}, DEFAULT_THEME.task.result.ignored, task.result.ignored);
+          }
+        }
+      }
+    }
+  }, {
     key: "startReport",
     value: function startReport(title) {
-      this.println(title);
-    }
-  }, {
-    key: "startTask",
-    value: function startTask(title, task) {
-      this.print(title);
-    }
-  }, {
-    key: "endTask",
-    value: function endTask(res) {
-      this.println(" " + this.formatResult(res.result) + " (" + res.time + " ms)");
-      if (res.result == "failed") this.println(res.error);
+      title = this.formatReportTitle(title);
+      this.println(this.theme.report.header.pre.text + title + this.theme.report.header.post.text);
     }
   }, {
     key: "endReport",
     value: function endReport() {
       var rep = this.report;
 
-      this.println("");
+      this.print(this.theme.report.footer.pre.text);
       this.println("     OK: " + rep.ok.length);
       this.println(" Failed: " + rep.failed.length);
       this.println("Ignored: " + rep.ignored.length);
       this.println("  Total: " + rep.length);
+      this.print(this.theme.report.footer.post.text);
+    }
+  }, {
+    key: "endTask",
+    value: function endTask(res) {
+      var header = this.theme.task.header.pre.text;
+      var result = this.formatResult(res.result);
+      var title = this.formatTaskTitle(res.title);
+      var time = res.time;
+
+      this.println("" + header + result + " " + title + " (" + time + " ms)");
+      if (result == "failed") this.println(res.error);
+    }
+  }, {
+    key: "formatReportTitle",
+    value: function formatReportTitle(title) {
+      return title;
+    }
+  }, {
+    key: "formatTaskTitle",
+    value: function formatTaskTitle(title) {
+      return title;
     }
   }, {
     key: "formatResult",
     value: function formatResult(result) {
-      return this.theme[result].text;
+      return this.theme.task.result[result].text;
     }
   }], [{
     key: "DEFAULT_THEME",

@@ -9,6 +9,7 @@ describe("ColoredConsoleReporter", function() {
 
     it("constructor()", function() {
       var rep = new ColoredConsoleReporter();
+
       rep.must.have({
         name: "reporter",
         enabled: true,
@@ -33,20 +34,30 @@ describe("ColoredConsoleReporter", function() {
       var rep = new ColoredConsoleReporter({
         enabled: false,
         theme: {
-          ok: {text: "OK", color: "black"},
-          failed: {text: "FAILED"},
-          ignored: {text: "IGNORED"}
+          task: {
+            result: {
+              ok: {text: "OK", color: "black"},
+              failed: {text: "FAILED", color: "blue"},
+              ignored: {text: "IGNORED", color: "blue"}
+            }
+          }
         }
       });
+
       rep.must.have({
         name: "reporter",
         enabled: false,
         disabled: true,
         stack: [],
         theme: {
-          ok: {text: "OK", color: "black"},
-          failed: {text: "FAILED", color: DEFAULT_THEME.failed.color},
-          ignored: {text: "IGNORED", color: DEFAULT_THEME.ignored.color}
+          report: DEFAULT_THEME.report,
+          task: {
+            result: {
+              ok: {text: "OK", color: "black"},
+              failed: {text: "FAILED", color: "blue"},
+              ignored: {text: "IGNORED", color: "blue"}
+            }
+          }
         }
       });
     });
@@ -57,21 +68,31 @@ describe("ColoredConsoleReporter", function() {
         {
           enabled: false,
           theme: {
-            ok: {text: "OK", color: "black"},
-            failed: {text: "FAILED"},
-            ignored: {text: "IGNORED"}
+            task: {
+              result: {
+                ok: {text: "OK", color: "black"},
+                failed: {text: "FAILED", color: "black"},
+                ignored: {text: "IGNORED", color: "black"}
+              }
+            }
           }
         }
       );
+
       rep.must.have({
         name: "test",
         enabled: false,
         disabled: true,
         stack: [],
         theme: {
-          ok: {text: "OK", color: "black"},
-          failed: {text: "FAILED", color: DEFAULT_THEME.failed.color},
-          ignored: {text: "IGNORED", color: DEFAULT_THEME.ignored.color}
+          report: DEFAULT_THEME.report,
+          task: {
+            result: {
+              ok: {text: "OK", color: "black"},
+              failed: {text: "FAILED", color: "black"},
+              ignored: {text: "IGNORED", color: "black"}
+            }
+          }
         }
       });
     });
@@ -93,10 +114,9 @@ describe("ColoredConsoleReporter", function() {
 
       rep.spy.called("endTask()").must.be.eq(1);
       rep.spy.called("println()").must.be.eq(2);
-      rep.spy.called("print()").must.be.eq(1);
-      rep.spy.getArguments("println()", 0).must.be.eq(["Test report"]);
-      rep.spy.getArguments("print()").must.be.eq(["test"]);
-      rep.spy.getArguments("println()", 1)[0].must.match(/^ .+V.+ \([0-9]+ ms\)$/);
+      rep.spy.called("print()").must.be.eq(0);
+      rep.spy.getArguments("println()", 0)[0].must.match(/^■ .+Test report.+$/);
+      rep.spy.getArguments("println()", 1)[0].must.match(/^♦ .+✓.+ .+test.+ \([0-9]+ ms\)$/);
     });
   });
 });

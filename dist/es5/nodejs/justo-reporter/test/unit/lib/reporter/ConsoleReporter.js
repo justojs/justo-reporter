@@ -29,13 +29,25 @@ describe("ConsoleReporter", function() {
       });
     });
 
-    it("constructor(opts)", function() {
+    it("constructor(opts) - with report", function() {
       var rep = new ConsoleReporter({
         enabled: false,
         theme: {
-          ok: {text: "OK"},
-          failed: {text: "FAILED"},
-          ignored: {text: "IGNORED"}
+          report: {
+            header: {
+              pre: {
+                text: "="
+              },
+              post: {
+                text: "="
+              }
+            },
+            footer: {
+              pre: {
+                text: "---"
+              },
+            }
+          }
         }
       });
       rep.must.have({
@@ -44,9 +56,71 @@ describe("ConsoleReporter", function() {
         disabled: true,
         stack: [],
         theme: {
-          ok: {text: "OK"},
-          failed: {text: "FAILED"},
-          ignored: {text: "IGNORED"}
+          report: {
+            header: {
+              pre: {
+                text: "="
+              },
+              post: {
+                text: "="
+              }
+            },
+            footer: {
+              pre: {
+                text: "---"
+              },
+              post: DEFAULT_THEME.report.footer.post
+            }
+          },
+          task: DEFAULT_THEME.task
+        }
+      });
+    });
+
+    it("constructor(opts) - with task", function() {
+      var rep = new ConsoleReporter({
+        enabled: false,
+        theme: {
+          task: {
+            header: {
+              pre: {
+                text: "="
+              }
+            },
+            result: {
+              ok: {
+                text: "OK"
+              },
+              failed: {
+                text: "FAILED"
+              }
+            }
+          }
+        }
+      });
+      rep.must.have({
+        name: "reporter",
+        enabled: false,
+        disabled: true,
+        stack: [],
+        theme: {
+          report: DEFAULT_THEME.report,
+          task: {
+            header: {
+              pre: {
+                text: "="
+              }
+            },
+            result: {
+              ok: {
+                text: "OK"
+              },
+              failed: {
+                text: "FAILED"
+              },
+              ignored: DEFAULT_THEME.task.result.ignored
+            }
+          }
         }
       });
     });
@@ -57,9 +131,13 @@ describe("ConsoleReporter", function() {
         {
           enabled: false,
           theme: {
-            ok: {text: "OK"},
-            failed: {text: "FAILED"},
-            ignored: {text: "IGNORED"}
+            report: {
+              footer: {
+                pre: {
+                  text: "---"
+                }
+              }
+            }
           }
         }
       );
@@ -69,50 +147,63 @@ describe("ConsoleReporter", function() {
         disabled: true,
         stack: [],
         theme: {
-          ok: {text: "OK"},
-          failed: {text: "FAILED"},
-          ignored: {text: "IGNORED"}
+          report: {
+            header: DEFAULT_THEME.report.header,
+            footer: {
+              pre: {
+                text: "---"
+              },
+              post: DEFAULT_THEME.report.footer.post
+            }
+          },
+          task: DEFAULT_THEME.task
         }
       });
     });
   });
 
-  describe("#startReport()", function() {
+  describe("Report", function() {
     var rep;
 
     beforeEach(function() {
-      rep = spy(new ConsoleReporter(), ["startReport()", "print() {}", "println() {}"]);
+      rep = spy(new ConsoleReporter(), ["startReport()", "endReport()", "print() {}", "println() {}"]);
     });
 
-    it("startReport()", function() {
+    it("#startReport()", function() {
       rep.start("Test report");
+
       rep.spy.called("startReport()").must.be.eq(1);
-      rep.spy.getArguments("startReport()").must.be.eq(["Test report"]);
+      rep.spy.calledWith("startReport()", ["Test report"]).must.be.eq(1);
+      rep.spy.called("endReport()").must.be.eq(0);
+
       rep.spy.called("print()").must.be.eq(0);
       rep.spy.called("println()").must.be.eq(1);
-      rep.spy.getArguments("println()").must.be.eq(["Test report"]);
-    });
-  });
-
-  describe("#startTask()", function() {
-    var rep;
-
-    beforeEach(function() {
-      rep = spy(new ConsoleReporter(), ["startTask()", "print() {}", "println() {}"]);
+      rep.spy.getArguments("println()").must.be.eq(["■ Test report"]);
+      rep.spy.called("endReport()").must.be.eq(0);
     });
 
-    it("startTask()", function() {
+    it("#endReport()", function() {
       rep.start("Test report");
-      rep.start("test", {});
-      rep.spy.called("startTask()").must.be.eq(1);
-      rep.spy.calledWith("startTask()", ["test", {}]).must.be.eq(1);
-      rep.spy.called("print()").must.be.eq(1);
-      rep.spy.calledWith("print()", ["test"]).must.be.eq(1);
-      rep.spy.called("println()").must.be.eq(1);
+      rep.end();
+
+      rep.spy.called("startReport()").must.be.eq(1);
+      rep.spy.getArguments("startReport()").must.be.eq(["Test report"]);
+      rep.spy.called("endReport()").must.be.eq(1);
+      rep.spy.calledWith("endReport()", []).must.be.eq(1);
+
+      rep.spy.called("print()").must.be.eq(2);
+      rep.spy.getArguments("print()", 0).must.be.eq(["---\n"]);
+      rep.spy.getArguments("print()", 1).must.be.eq(["---\n"]);
+      rep.spy.called("println()").must.be.eq(5);
+      rep.spy.getArguments("println()", 0).must.be.eq(["■ Test report"]);
+      rep.spy.getArguments("println()", 1)[0].must.match(/OK: .+/);
+      rep.spy.getArguments("println()", 2)[0].must.match(/Failed: .+/);
+      rep.spy.getArguments("println()", 3)[0].must.match(/Ignored: .+/);
+      rep.spy.getArguments("println()", 4)[0].must.match(/Total: .+/);
     });
   });
 
-  describe("#endTask()", function() {
+  describe("Task", function() {
     var rep, task;
 
     beforeEach(function() {
@@ -123,15 +214,14 @@ describe("ConsoleReporter", function() {
     it("endTask()", function() {
       rep.start("Test report");
       rep.start("test", task);
-
       rep.end(task, "ok", undefined, Date.now(), Date.now() + 10);
 
       rep.spy.called("endTask()").must.be.eq(1);
-      rep.spy.called("print()").must.be.eq(1);
+
+      rep.spy.called("print()").must.be.eq(0);
       rep.spy.called("println()").must.be.eq(2);
-      rep.spy.getArguments("println()", 0).must.be.eq(["Test report"]);
-      rep.spy.getArguments("print()").must.be.eq(["test"]);
-      rep.spy.getArguments("println()", 1)[0].must.match(/^ V \([0-9]+ ms\)$/);
+      rep.spy.getArguments("println()", 0).must.be.eq(["■ Test report"]);
+      rep.spy.getArguments("println()", 1)[0].must.match(/^♦ ✓ test \([0-9]+ ms\)$/);
     });
   });
 });
