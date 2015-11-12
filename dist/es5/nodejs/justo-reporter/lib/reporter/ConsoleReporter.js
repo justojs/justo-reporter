@@ -7,7 +7,7 @@ var DEFAULT_THEME = {
   report: { 
     header: { 
       pre: { 
-        text: "  " }, 
+        text: "\n  " }, 
 
       post: { 
         text: "" } }, 

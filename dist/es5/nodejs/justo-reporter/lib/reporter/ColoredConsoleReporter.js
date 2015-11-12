@@ -11,7 +11,7 @@ var DEFAULT_THEME = {
         color: "yellow" }, 
 
       pre: { 
-        text: "  ", 
+        text: "\n  ", 
         color: "yellow" }, 
 
       post: { 
@@ -117,10 +117,10 @@ ColoredConsoleReporter = (function (_ConsoleReporter) {_inherits(ColoredConsoleR
       var rep = this.report;
 
       this.print(_colors2["default"][this.theme.report.footer.pre.color](this.theme.report.footer.pre.text));
-      this.println("  " + _colors2["default"][this.theme.task.result.ok.color]("OK") + "      " + rep.ok.length);
-      this.println("  " + _colors2["default"][this.theme.task.result.failed.color]("Failed") + "  " + rep.failed.length);
-      this.println("  " + _colors2["default"][this.theme.task.result.ignored.color]("Ignored") + " " + rep.ignored.length);
-      this.println("  Total   " + rep.length);
+      this.print("  " + _colors2["default"][this.theme.task.result.ok.color]("OK") + " " + rep.ok.length);
+      this.print(" " + _colors2["default"][this.theme.task.result.failed.color]("Failed") + " " + rep.failed.length);
+      this.print(" " + _colors2["default"][this.theme.task.result.ignored.color]("Ignored") + " " + rep.ignored.length);
+      this.println(" Total " + rep.length);
       this.print(_colors2["default"][this.theme.report.footer.post.color](this.theme.report.footer.post.text));} }, { key: "formatReportPreTitle", value: 
 
 
