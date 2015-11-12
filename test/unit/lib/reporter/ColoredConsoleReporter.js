@@ -105,8 +105,8 @@ describe("ColoredConsoleReporter", function() {
       rep.spy.called("endTask()").must.be.eq(1);
       rep.spy.called("println()").must.be.eq(2);
       rep.spy.called("print()").must.be.eq(0);
-      rep.spy.getArguments("println()", 0)[0].must.match(/^■ .+Test report.+$/);
-      rep.spy.getArguments("println()", 1)[0].must.match(/^♦ .+✓.+ .+test.+ \([0-9]+ ms\)$/);
+      rep.spy.getArguments("println()", 0)[0].must.match(/^.+Test report.+$/);
+      rep.spy.getArguments("println()", 1)[0].must.match(/^.+V.+ .+test.+ .+\([0-9]+ ms\).+$/);
     });
   });
 });

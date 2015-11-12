@@ -168,7 +168,7 @@ describe("ConsoleReporter", function() {
 
       rep.spy.called("print()").must.be.eq(0);
       rep.spy.called("println()").must.be.eq(1);
-      rep.spy.getArguments("println()").must.be.eq(["■ Test report"]);
+      rep.spy.getArguments("println()").must.be.eq(["  Test report"]);
       rep.spy.called("endReport()").must.be.eq(0);
     });
 
@@ -182,10 +182,10 @@ describe("ConsoleReporter", function() {
       rep.spy.calledWith("endReport()", []).must.be.eq(1);
 
       rep.spy.called("print()").must.be.eq(2);
-      rep.spy.getArguments("print()", 0).must.be.eq(["---\n"]);
-      rep.spy.getArguments("print()", 1).must.be.eq(["---\n"]);
+      rep.spy.getArguments("print()", 0).must.be.eq(["\n"]);
+      rep.spy.getArguments("print()", 1).must.be.eq(["\n"]);
       rep.spy.called("println()").must.be.eq(5);
-      rep.spy.getArguments("println()", 0).must.be.eq(["■ Test report"]);
+      rep.spy.getArguments("println()", 0).must.be.eq(["  Test report"]);
       rep.spy.getArguments("println()", 1)[0].must.match(/OK: .+/);
       rep.spy.getArguments("println()", 2)[0].must.match(/Failed: .+/);
       rep.spy.getArguments("println()", 3)[0].must.match(/Ignored: .+/);
@@ -210,8 +210,8 @@ describe("ConsoleReporter", function() {
 
       rep.spy.called("print()").must.be.eq(0);
       rep.spy.called("println()").must.be.eq(2);
-      rep.spy.getArguments("println()", 0).must.be.eq(["■ Test report"]);
-      rep.spy.getArguments("println()", 1)[0].must.match(/^♦ ✓ test \([0-9]+ ms\)$/);
+      rep.spy.getArguments("println()", 0).must.be.eq(["  Test report"]);
+      rep.spy.getArguments("println()", 1)[0].must.match(/^  V test \([0-9]+ ms\)$/);
     });
   });
 });

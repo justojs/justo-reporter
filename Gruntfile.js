@@ -10,7 +10,8 @@ module.exports = function(grunt) {
     babel: {
       options: {
         sourceMap: false,
-        comments: false
+        comments: false,
+        retainLines: true
       },
 
       es5: {
@@ -20,6 +21,7 @@ module.exports = function(grunt) {
           "build/es5/lib/Reporter.js": "lib/Reporter.js",
           "build/es5/lib/Reporters.js": "lib/Reporters.js",
           "build/es5/lib/Result.js": "lib/Result.js",
+          "build/es5/lib/util.js": "lib/util.js",
           "build/es5/lib/reporter/ConsoleReporter.js": "lib/reporter/ConsoleReporter.js",
           "build/es5/lib/reporter/ColoredConsoleReporter.js": "lib/reporter/ColoredConsoleReporter.js"
         }
