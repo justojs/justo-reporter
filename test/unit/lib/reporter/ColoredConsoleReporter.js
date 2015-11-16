@@ -1,9 +1,17 @@
 //imports
 const spy = require("justo-spy");
+const stub = require("justo-stub");
+const ResultState = require("justo-result").ResultState;
 const ColoredConsoleReporter = require("../../../../dist/es5/nodejs/justo-reporter").reporter.ColoredConsoleReporter;
 
 //suite
 describe("ColoredConsoleReporter", function() {
+  var task;
+
+  beforeEach(function() {
+    task = stub({}, {"isSimple()": true, "isMacro()": false, "isWorkflow()": false});
+  });
+
   describe("#constructor()", function() {
     const DEFAULT_THEME = ColoredConsoleReporter.DEFAULT_THEME;
 
@@ -89,18 +97,17 @@ describe("ColoredConsoleReporter", function() {
   });
 
   describe("#endTask()", function() {
-    var rep, task;
+    var rep;
 
     beforeEach(function() {
       rep = spy(new ColoredConsoleReporter(), ["endTask()", "print() {}", "println() {}"]);
-      task = {};
     });
 
     it("endTask()", function() {
       rep.start("Test report");
       rep.start("test", task);
 
-      rep.end(task, "ok", undefined, Date.now(), Date.now() + 10);
+      rep.end(task, ResultState.OK, undefined, Date.now(), Date.now() + 10);
 
       rep.spy.called("endTask()").must.be.eq(1);
       rep.spy.called("println()").must.be.eq(2);

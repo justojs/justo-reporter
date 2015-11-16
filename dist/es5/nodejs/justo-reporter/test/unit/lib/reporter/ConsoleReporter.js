@@ -1,9 +1,17 @@
 //imports
 const spy = require("justo-spy");
+const stub = require("justo-stub");
+const ResultState = require("justo-result").ResultState;
 const ConsoleReporter = require("../../../../dist/es5/nodejs/justo-reporter").reporter.ConsoleReporter;
 
 //suite
 describe("ConsoleReporter", function() {
+  var task;
+
+  beforeEach(function() {
+    task = stub({}, {"isSimple()": true, "isMacro()": false, "isWorkflow()": false});
+  });
+
   describe("#constructor()", function() {
     const DEFAULT_THEME = ConsoleReporter.DEFAULT_THEME;
 
@@ -194,17 +202,16 @@ describe("ConsoleReporter", function() {
   });
 
   describe("Task", function() {
-    var rep, task;
+    var rep;
 
     beforeEach(function() {
       rep = spy(new ConsoleReporter(), ["endTask()", "print() {}", "println() {}"]);
-      task = {};
     });
 
     it("endTask()", function() {
       rep.start("Test report");
       rep.start("test", task);
-      rep.end(task, "ok", undefined, Date.now(), Date.now() + 10);
+      rep.end(task, ResultState.OK, undefined, 0, 10);
 
       rep.spy.called("endTask()").must.be.eq(1);
 

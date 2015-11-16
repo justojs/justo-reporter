@@ -1,6 +1,7 @@
-"use strict";Object.defineProperty(exports, "__esModule", { value: true });var _createClass = (function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};})();function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { "default": obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}var _Report = require(
-"./Report");var _Report2 = _interopRequireDefault(_Report);var _Result = require(
-"./Result");var _Result2 = _interopRequireDefault(_Result);
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });var _createClass = (function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};})();function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { "default": obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}var _justoResult = require(
+"justo-result");var _Report = require(
+"./Report");var _Report2 = _interopRequireDefault(_Report);var _Stack = require(
+"./Stack");var _Stack2 = _interopRequireDefault(_Stack);
 
 
 var startReport = Symbol();
@@ -38,7 +39,7 @@ Reporter = (function () {
 
     Object.defineProperty(this, "name", { value: opts.name || "reporter", enumerable: true });
     Object.defineProperty(this, "enabled", { value: opts.hasOwnProperty("enabled") ? !!opts.enabled : true, enumerable: true });
-    Object.defineProperty(this, "stack", { value: [] });
+    Object.defineProperty(this, "stack", { value: new _Stack2["default"]() });
     Object.defineProperty(this, "_report", { value: undefined, writable: true });}_createClass(Reporter, [{ key: "start", value: 
 
 
@@ -87,14 +88,77 @@ Reporter = (function () {
 
       if (arguments.length === 0) throw new Error("Invalid number of arguments. Expected at least one.");else 
       if (arguments.length === 1) this[startReport](title);else 
-      this[startTask](title, task);} }, { key: 
+      this[startTask](title, task);} }, { key: "end", value: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function end() {
+
+      if (this.disabled) return;for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {args[_key] = arguments[_key];}
+
+
+      if (args.length === 0) this[endReport]();else 
+      this[endTask].apply(this, args);} }, { key: "ignore", value: 
+
+
+
+
+
+
+
+
+    function ignore(title, task) {
+      var res, parent;
+
+
+      if (this.disabled) return;
+
+      if (!this.started) {
+        throw new Error("No report started.");}
+
+
+
+      if (arguments.length < 2) throw new Error("Invalid number of arguments. Expected two.");
+
+
+      parent = this.stack.top;
+
+      if (task.isSimple()) res = new _justoResult.SimpleTaskResult(parent, title, task, _justoResult.ResultState.IGNORED);else 
+      if (task.isMacro()) res = new _justoResult.MacroResult(parent, title, task, _justoResult.ResultState.IGNORED);else 
+      if (task.isWorkflow()) res = new _justoResult.WorkflowResult(parent, title, task, _justoResult.ResultState.IGNORED);else 
+      throw new Error("Invalid type of task.");
+
+
+      this.ignoreTask(res);} }, { key: "ignoreTask", value: 
+
+
+
+
+
+
+
+
+    function ignoreTask(res) {} }, { key: 
+
 
 
 
 
 
     startReport, value: function value(title) {
-      if (this.stack.length) {
+      if (this.stack.hasResults()) {
         throw new Error("Invalid start of report. There're tasks.");} else 
       {
         if (this.started) {
@@ -119,66 +183,13 @@ Reporter = (function () {
 
 
 
-    startTask, value: function value(title, task) {
-
-      if (!task) {
-        throw new Error("Invalid number of arguments. Expected title and task. Only one received.");}
-
-
-      if (!this.started) {
-        throw new Error("No report started.");}
-
-
-
-      this.stack.push({ title: title, task: task });
-
-
-      this.startTask(title, task);} }, { key: "startTask", value: 
-
-
-
-
-
-
-
-
-
-    function startTask(title, task) {} }, { key: "end", value: 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    function end() {
-
-      if (this.disabled) return;for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {args[_key] = arguments[_key];}
-
-
-      if (args.length === 0) this[endReport]();else 
-      this[endTask].apply(this, args);} }, { key: 
-
-
-
-
-
     endReport, value: function value() {
 
       if (!this.started) {
         throw new Error("Invalid end of report. No report started.");}
 
 
-      if (this.stack.length > 0) {
+      if (this.stack.hasResults()) {
         throw new Error("Invalid end of report. There're active tasks.");}
 
 
@@ -198,8 +209,48 @@ Reporter = (function () {
 
 
 
-    endTask, value: function value(task, result, error, start, end) {
-      var item, res;
+    startTask, value: function value(title, task) {
+      var res, parent;
+
+
+      if (!task) {
+        throw new Error("Invalid number of arguments. Expected title and task. Only one received.");}
+
+
+      if (!this.started) {
+        throw new Error("No report started.");}
+
+
+
+      parent = this.stack.top;
+
+      if (task.isSimple()) res = new _justoResult.SimpleTaskResult(parent, title, task);else 
+      if (task.isMacro()) res = new _justoResult.MacroResult(parent, title, task);else 
+      if (task.isWorkflow()) res = new _justoResult.WorkflowResult(parent, title, task);else 
+      throw new Error("Invalid type of task.");
+
+      this.stack.push(res);
+
+
+      this.startTask(title, task);} }, { key: "startTask", value: 
+
+
+
+
+
+
+
+
+
+    function startTask(title, task) {} }, { key: 
+
+
+
+
+
+
+    endTask, value: function value(task, state, error, start, end) {
+      var res;
 
 
       if (arguments.length == 1) {
@@ -207,16 +258,22 @@ Reporter = (function () {
 
 
 
-      item = this.stack.pop();
+      res = this.stack.pop();
 
-      if (item.task !== task) {
+      if (res.task !== task) {
         throw new Error("Invalid end of task. Another task must be ended firstly.");}
 
 
 
-      this.report.add(res = new _Result2["default"](item.title, task, result, error, start, end));
-      this.endTask(res);} }, { key: "endTask", value: 
+      if (res instanceof _justoResult.SimpleTaskResult) res.setResult(state, error, start, end);
 
+
+      if (!res.hasParent()) {
+        this.report.add(res);}
+
+
+
+      this.endTask(res);} }, { key: "endTask", value: 
 
 
 

@@ -1,11 +1,21 @@
 //imports
 const spy = require("justo-spy");
+const stub = require("justo-stub");
+const ResultState = require("justo-result").ResultState;
 const jreporter = require("../../../dist/es5/nodejs/justo-reporter");
 const Reporter = jreporter.Reporter;
 const Reporters = jreporter.Reporters;
 
 //suite
 describe("Reporters", function() {
+  var task, task1, task2;
+
+  beforeEach(function() {
+    task = stub({}, {"isSimple()": true, "isMacro()": false, "isWorkflow()": false});
+    task1 = stub({}, {"isSimple()": true, "isMacro()": false, "isWorkflow()": false});
+    task2 = stub({}, {"isSimple()": true, "isMacro()": false, "isWorkflow()": false});
+  });
+
   describe("#constructor()", function() {
     it("constructor()", function() {
       new Reporters().length.must.be.eq(0);
@@ -62,11 +72,12 @@ describe("Reporters", function() {
 
     beforeEach(function() {
       reps = new Reporters();
-      reps.add(rep1 = spy(new Reporter(), "end() {}"));
-      reps.add(rep2 = spy(new Reporter(), "end() {}"));
+      reps.add(rep1 = spy(new Reporter("one"), "end()"));
+      reps.add(rep2 = spy(new Reporter("two"), "end()"));
     });
 
     it("end() - end of report", function() {
+      reps.start("Test report");
       reps.end();
       rep1.spy.called("end()").must.be.eq(1);
       rep1.spy.getCall("end()").arguments.must.be.eq([]);
@@ -74,28 +85,30 @@ describe("Reporters", function() {
       rep2.spy.getCall("end()").arguments.must.be.eq([]);
     });
 
-    it("end() - end of task", function() {
+    it("end() - end of one task", function() {
       reps.start("Test report");
-      reps.start("test", {});
-      reps.end({}, "ok");
+      reps.start("test", task);
+      reps.end(task, ResultState.OK);
+
       rep1.spy.called("end()").must.be.eq(1);
-      rep1.spy.getCall("end()").arguments.must.be.eq([{}, "ok"]);
+      rep1.spy.getCall("end()").arguments.must.be.eq([task, ResultState.OK]);
       rep2.spy.called("end()").must.be.eq(1);
-      rep2.spy.getCall("end()").arguments.must.be.eq([{}, "ok"]);
+      rep2.spy.getCall("end()").arguments.must.be.eq([task, ResultState.OK]);
     });
 
     it("end() - end of two tasks", function() {
       reps.start("Test report");
-      reps.start("one", {});
-      reps.start("two", {});
-      reps.end({}, "ok");
-      reps.end({}, "ok");
+      reps.start("task1", task1);
+      reps.end(task1, ResultState.OK);
+      reps.start("task2", task2);
+      reps.end(task2, ResultState.OK);
+
       rep1.spy.called("end()").must.be.eq(2);
-      rep1.spy.getCall("end()", 0).arguments.must.be.eq([{}, "ok"]);
-      rep1.spy.getCall("end()", 1).arguments.must.be.eq([{}, "ok"]);
+      rep1.spy.getCall("end()", 0).arguments.must.be.eq([task1, ResultState.OK]);
+      rep1.spy.getCall("end()", 1).arguments.must.be.eq([task2, ResultState.OK]);
       rep2.spy.called("end()").must.be.eq(2);
-      rep2.spy.getCall("end()", 0).arguments.must.be.eq([{}, "ok"]);
-      rep2.spy.getCall("end()", 1).arguments.must.be.eq([{}, "ok"]);
+      rep2.spy.getCall("end()", 0).arguments.must.be.eq([task1, ResultState.OK]);
+      rep2.spy.getCall("end()", 1).arguments.must.be.eq([task2, ResultState.OK]);
     });
   });
 });
