@@ -208,13 +208,13 @@ describe("Reporter", function() {
     });
 
     describe("End of task", function() {
-      it("end(task) - forgot result", function() {
+      it("end(compositeTask)", function() {
         rep.start("Test report");
-        rep.start("test", task);
-        rep.end.bind(rep, task).must.raise("Invalid number of arguents. Expected, at least, task and result.");
-        rep.stack.length.must.be.eq(1);
+        rep.start("test", macro);
+        rep.end(macro);
+        rep.stack.length.must.be.eq(0);
         rep.spy.called("endReport()").must.be.eq(0);
-        rep.spy.called("endTask()").must.be.eq(0);
+        rep.spy.called("endTask()").must.be.eq(1);
       });
 
       it("end(task, result) - none ended", function() {

@@ -141,6 +141,11 @@ Reporter = (function () {
       throw new Error("Invalid type of task.");
 
 
+      if (!res.hasParent()) {
+        this.report.add(res);}
+
+
+
       this.ignoreTask(res);} }, { key: "ignoreTask", value: 
 
 
@@ -251,11 +256,6 @@ Reporter = (function () {
 
     endTask, value: function value(task, state, error, start, end) {
       var res;
-
-
-      if (arguments.length == 1) {
-        throw new Error("Invalid number of arguents. Expected, at least, task and result.");}
-
 
 
       res = this.stack.pop();

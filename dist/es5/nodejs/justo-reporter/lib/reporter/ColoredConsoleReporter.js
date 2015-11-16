@@ -12,22 +12,12 @@ var DEFAULT_THEME = {
         color: "yellow" }, 
 
       pre: { 
-        text: "\n  ", 
+        text: "", 
         color: "yellow" }, 
 
       post: { 
         text: "", 
-        color: "yellow" } }, 
-
-
-    footer: { 
-      pre: { 
-        text: "\n", 
-        color: "gray" }, 
-
-      post: { 
-        text: "\n", 
-        color: "gray" } } }, 
+        color: "yellow" } } }, 
 
 
 
@@ -37,7 +27,7 @@ var DEFAULT_THEME = {
         color: "white" }, 
 
       pre: { 
-        text: "  ", 
+        text: "", 
         color: "white" } }, 
 
 
@@ -51,7 +41,7 @@ var DEFAULT_THEME = {
         color: "red" }, 
 
       ignored: { 
-        text: "-", 
+        text: "I", 
         color: "grey" } } } };var 
 
 
@@ -77,17 +67,11 @@ ColoredConsoleReporter = (function (_ConsoleReporter) {_inherits(ColoredConsoleR
           var report = theme.report;
 
           this.theme.report.header = Object.assign({}, DEFAULT_THEME.report.header, report.header);
-          this.theme.report.footer = Object.assign({}, DEFAULT_THEME.report.footer, report.footer);
 
           if (report.header) {
             this.theme.report.header.title = Object.assign({}, DEFAULT_THEME.report.header.title, report.header.title);
             this.theme.report.header.pre = Object.assign({}, DEFAULT_THEME.report.header.pre, report.header.pre);
-            this.theme.report.header.post = Object.assign({}, DEFAULT_THEME.report.header.post, report.header.post);}
-
-
-          if (report.footer) {
-            this.theme.report.footer.pre = Object.assign({}, DEFAULT_THEME.report.footer.pre, report.footer.pre);
-            this.theme.report.footer.post = Object.assign({}, DEFAULT_THEME.report.footer.post, report.footer.post);}}
+            this.theme.report.header.post = Object.assign({}, DEFAULT_THEME.report.header.post, report.header.post);}}
 
 
 
@@ -120,12 +104,12 @@ ColoredConsoleReporter = (function (_ConsoleReporter) {_inherits(ColoredConsoleR
       var failed = rep.getNumberOf(_justoResult.ResultState.FAILED);
       var ignored = rep.getNumberOf(_justoResult.ResultState.IGNORED);
 
-      this.print(_colors2["default"][this.theme.report.footer.pre.color](this.theme.report.footer.pre.text));
+      this.println("");
       this.print("  " + _colors2["default"][this.theme.task.result.ok.color]("OK") + " " + ok);
-      this.print(" " + _colors2["default"][this.theme.task.result.failed.color]("Failed") + " " + failed);
-      this.print(" " + _colors2["default"][this.theme.task.result.ignored.color]("Ignored") + " " + ignored);
-      this.println(" Total " + (ok + failed + ignored));
-      this.print(_colors2["default"][this.theme.report.footer.post.color](this.theme.report.footer.post.text));} }, { key: "formatReportPreTitle", value: 
+      this.print(" | " + _colors2["default"][this.theme.task.result.failed.color]("Failed") + " " + failed);
+      this.print(" | " + _colors2["default"][this.theme.task.result.ignored.color]("Ignored") + " " + ignored);
+      this.println(" | Total " + (ok + failed + ignored));
+      this.println("");} }, { key: "formatReportPreTitle", value: 
 
 
 
@@ -152,8 +136,8 @@ ColoredConsoleReporter = (function (_ConsoleReporter) {_inherits(ColoredConsoleR
 
 
 
-    function formatTaskPreTitle(level) {
-      return _colors2["default"][this.theme.task.header.pre.color](this.theme.task.header.pre.text.repeat(level));} }, { key: "formatTaskTitle", value: 
+    function formatTaskPreTitle() {
+      return _colors2["default"][this.theme.task.header.pre.color](this.theme.task.header.pre.text);} }, { key: "formatTaskTitle", value: 
 
 
 
@@ -181,8 +165,8 @@ ColoredConsoleReporter = (function (_ConsoleReporter) {_inherits(ColoredConsoleR
 
 
 
-    function formatTaskError(err) {
-      return _colors2["default"][this.theme.task.result.failed.color]((0, _utilJs.indent)(err.toString(), 1, "    "));} }], [{ key: "DEFAULT_THEME", get: 
+    function formatTaskError(err, level) {
+      return _colors2["default"][this.theme.task.result.failed.color]((0, _utilJs.indent)(err.toString(), level, "    "));} }], [{ key: "DEFAULT_THEME", get: 
 
 
     function get() {

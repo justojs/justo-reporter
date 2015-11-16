@@ -75,11 +75,6 @@ describe("ConsoleReporter", function() {
               post: {
                 text: "="
               }
-            },
-            footer: {
-              pre: {
-                text: "---"
-              },
             }
           }
         }
@@ -99,12 +94,6 @@ describe("ConsoleReporter", function() {
                 text: "="
               }
             },
-            footer: {
-              pre: {
-                text: "---"
-              },
-              post: DEFAULT_THEME.report.footer.post
-            }
           },
           task: DEFAULT_THEME.task
         }
@@ -189,15 +178,15 @@ describe("ConsoleReporter", function() {
       rep.spy.called("endReport()").must.be.eq(1);
       rep.spy.calledWith("endReport()", []).must.be.eq(1);
 
-      rep.spy.called("print()").must.be.eq(2);
-      rep.spy.getArguments("print()", 0).must.be.eq(["\n"]);
-      rep.spy.getArguments("print()", 1).must.be.eq(["\n"]);
-      rep.spy.called("println()").must.be.eq(5);
+      rep.spy.called("print()").must.be.eq(3);
+      rep.spy.called("println()").must.be.eq(4);
       rep.spy.getArguments("println()", 0).must.be.eq(["\n  Test report"]);
-      rep.spy.getArguments("println()", 1)[0].must.match(/OK: .+/);
-      rep.spy.getArguments("println()", 2)[0].must.match(/Failed: .+/);
-      rep.spy.getArguments("println()", 3)[0].must.match(/Ignored: .+/);
-      rep.spy.getArguments("println()", 4)[0].must.match(/Total: .+/);
+      rep.spy.getArguments("println()", 1).must.be.eq([""]);
+      rep.spy.getArguments("print()", 0)[0].must.match(/^  OK .+/);
+      rep.spy.getArguments("print()", 1)[0].must.match(/^ | Failed .+/);
+      rep.spy.getArguments("print()", 2)[0].must.match(/^ | Ignored .+/);
+      rep.spy.getArguments("println()", 2)[0].must.match(/^ | Total .+/);
+      rep.spy.getArguments("println()", 3).must.be.eq([""]);
     });
   });
 
