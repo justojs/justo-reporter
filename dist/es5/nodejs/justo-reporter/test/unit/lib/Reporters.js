@@ -111,4 +111,24 @@ describe("Reporters", function() {
       rep2.spy.getCall("end()", 1).arguments.must.be.eq([task2, ResultState.OK]);
     });
   });
+
+  describe("#ignore()", function() {
+    var reps, rep1, rep2;
+
+    beforeEach(function() {
+      reps = new Reporters();
+      reps.add(rep1 = spy(new Reporter("one"), "ignore()"));
+      reps.add(rep2 = spy(new Reporter("two"), "ignore()"));
+    });
+
+    it("ignore()", function() {
+      reps.start("Test report");
+      reps.ignore("test", task);
+
+      rep1.spy.called("ignore()").must.be.eq(1);
+      rep1.spy.calledWith("ignore()", ["test", task]).must.be.eq(1);
+      rep2.spy.called("ignore()").must.be.eq(1);
+      rep2.spy.calledWith("ignore()", ["test", task]).must.be.eq(1);
+    });
+  });
 });
