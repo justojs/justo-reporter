@@ -137,7 +137,7 @@ describe("Reporter", function() {
 
         rep.started.must.be.eq(true);
         rep.stack.length.must.be.eq(2);
-        rep.stack[0].must.be.instanceOf("MacroResult");
+        rep.stack[0].must.be.instanceOf("CompositeTaskResult");
         rep.stack[0].must.have({parent: undefined});
         rep.stack[1].must.be.instanceOf("SimpleTaskResult");
         rep.stack[1].parent.task.must.be.same(macro);
@@ -167,7 +167,7 @@ describe("Reporter", function() {
       rep.stack.length.must.be.eq(0);
       rep.spy.called("ignoreTask()").must.be.eq(1);
       res = rep.spy.getArguments("ignoreTask()")[0];
-      res.must.be.instanceOf("MacroResult");
+      res.must.be.instanceOf("CompositeTaskResult");
       res.must.have({
         title: "test",
         state: ResultState.IGNORED,

@@ -140,7 +140,7 @@ ConsoleReporter = (function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
 
 
     function startTask(title, task) {
-      if (task.isMacro() || task.isWorkflow()) {
+      if (task.isComposite()) {
         this.println(
         "  ".repeat(this.stack.length) + 
         this.formatTaskPreTitle() + 

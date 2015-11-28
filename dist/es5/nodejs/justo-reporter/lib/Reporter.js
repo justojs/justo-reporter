@@ -136,9 +136,7 @@ Reporter = (function () {
       parent = this.stack.top;
 
       if (task.isSimple()) res = new _justoResult.SimpleTaskResult(parent, title, task, _justoResult.ResultState.IGNORED);else 
-      if (task.isMacro()) res = new _justoResult.MacroResult(parent, title, task, _justoResult.ResultState.IGNORED);else 
-      if (task.isWorkflow()) res = new _justoResult.WorkflowResult(parent, title, task, _justoResult.ResultState.IGNORED);else 
-      throw new Error("Invalid type of task.");
+      res = new _justoResult.CompositeTaskResult(parent, title, task, _justoResult.ResultState.IGNORED);
 
 
       if (!res.hasParent()) {
@@ -230,9 +228,7 @@ Reporter = (function () {
       parent = this.stack.top;
 
       if (task.isSimple()) res = new _justoResult.SimpleTaskResult(parent, title, task);else 
-      if (task.isMacro()) res = new _justoResult.MacroResult(parent, title, task);else 
-      if (task.isWorkflow()) res = new _justoResult.WorkflowResult(parent, title, task);else 
-      throw new Error("Invalid type of task.");
+      res = new _justoResult.CompositeTaskResult(parent, title, task);
 
       this.stack.push(res);
 

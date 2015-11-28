@@ -9,7 +9,7 @@ describe("ColoredConsoleReporter", function() {
   var task;
 
   beforeEach(function() {
-    task = stub({}, {"isSimple()": true, "isMacro()": false, "isWorkflow()": false});
+    task = stub({}, {"isSimple()": true, "isComposite()": false});
   });
 
   describe("#constructor()", function() {
