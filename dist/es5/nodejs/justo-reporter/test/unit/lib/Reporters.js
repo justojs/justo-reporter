@@ -11,9 +11,9 @@ describe("Reporters", function() {
   var task, task1, task2;
 
   beforeEach(function() {
-    task = stub({}, {"isSimple()": true, "isMacro()": false, "isWorkflow()": false});
-    task1 = stub({}, {"isSimple()": true, "isMacro()": false, "isWorkflow()": false});
-    task2 = stub({}, {"isSimple()": true, "isMacro()": false, "isWorkflow()": false});
+    task = stub({}, {"isSimple()": true, "isComposite()": false});
+    task1 = stub({}, {"isSimple()": true, "isComposite()": false});
+    task2 = stub({}, {"isSimple()": true, "isComposite()": false});
   });
 
   describe("#constructor()", function() {

@@ -197,7 +197,7 @@ describe("ConsoleReporter", function() {
       rep = spy(new ConsoleReporter(), ["endTask()", "print() {}", "println() {}"]);
     });
 
-    it("endTask()", function() {
+    it("endTask() - OK", function() {
       rep.start("Test report");
       rep.start("test", task);
       rep.end(task, ResultState.OK, undefined, 0, 10);
@@ -208,6 +208,20 @@ describe("ConsoleReporter", function() {
       rep.spy.called("println()").must.be.eq(2);
       rep.spy.getArguments("println()", 0).must.be.eq(["\n  Test report"]);
       rep.spy.getArguments("println()", 1)[0].must.match(/^  V test \([0-9]+ ms\)$/);
+    });
+
+    it("endTask() - FAILED", function() {
+      rep.start("Test report");
+      rep.start("test", task);
+      rep.end(task, ResultState.FAILED, new Error("Syntax error."), 0, 10);
+
+      rep.spy.called("endTask()").must.be.eq(1);
+
+      rep.spy.called("print()").must.be.eq(0);
+      rep.spy.called("println()").must.be.eq(3);
+      rep.spy.getArguments("println()", 0).must.be.eq(["\n  Test report"]);
+      rep.spy.getArguments("println()", 1)[0].must.match(/^  X test \([0-9]+ ms\)$/);
+      rep.spy.getArguments("println()", 2)[0].must.be.eq("    Error: Syntax error.");
     });
   });
 });

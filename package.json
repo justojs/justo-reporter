@@ -1,6 +1,6 @@
 {
   "name": "justo-reporter",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "description": "The Justo.js reporter library.",
   "homepage": "http://www.justojs.org",
   "license": "MIT",
@@ -29,7 +29,8 @@
     "url": "https://github.com/justojs/justo-reporter.git"
   },
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=4.0.0",
+    "npm": ">=3.0.0"
   },
   "dependencies": {
     "colors": "*"

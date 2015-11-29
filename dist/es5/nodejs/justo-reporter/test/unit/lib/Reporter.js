@@ -9,16 +9,16 @@ describe("Reporter", function() {
   var task, task1, task2, task3, task4, task5, task6, task7, macro, workflow;
 
   beforeEach(function() {
-    task = stub({}, {"isSimple()": true, "isMacro()": false, "isWorkflow()": false});
-    task1 = stub({}, {"isSimple()": true, "isMacro()": false, "isWorkflow()": false});
-    task2 = stub({}, {"isSimple()": true, "isMacro()": false, "isWorkflow()": false});
-    task3 = stub({}, {"isSimple()": true, "isMacro()": false, "isWorkflow()": false});
-    task4 = stub({}, {"isSimple()": true, "isMacro()": false, "isWorkflow()": false});
-    task5 = stub({}, {"isSimple()": true, "isMacro()": false, "isWorkflow()": false});
-    task6 = stub({}, {"isSimple()": true, "isMacro()": false, "isWorkflow()": false});
-    task7 = stub({}, {"isSimple()": true, "isMacro()": false, "isWorkflow()": false});
-    macro = stub({}, {"isSimple()": false, "isMacro()": true, "isWorkflow()": false});
-    workflow = stub({}, {"isSimple()": false, "isMacro()": false, "isWorkflow()": false});
+    task = stub({}, {"isSimple()": true, "isComposite()": false});
+    task1 = stub({}, {"isSimple()": true, "isComposite()": false});
+    task2 = stub({}, {"isSimple()": true, "isComposite()": false});
+    task3 = stub({}, {"isSimple()": true, "isComposite()": false});
+    task4 = stub({}, {"isSimple()": true, "isComposite()": false});
+    task5 = stub({}, {"isSimple()": true, "isComposite()": false});
+    task6 = stub({}, {"isSimple()": true, "isComposite()": false});
+    task7 = stub({}, {"isSimple()": true, "isComposite()": false});
+    macro = stub({}, {"isSimple()": false, "isComposite()": true});
+    workflow = stub({}, {"isSimple()": false, "isComposite()": false});
   });
 
   describe("#constructor()", function() {
