@@ -1,8 +1,8 @@
-"use strict";Object.defineProperty(exports, "__esModule", { value: true });var _createClass = (function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};})();var _get = function get(_x, _x2, _x3) {var _again = true;_function: while (_again) {var object = _x, property = _x2, receiver = _x3;desc = parent = getter = undefined;_again = false;if (object === null) object = Function.prototype;var desc = Object.getOwnPropertyDescriptor(object, property);if (desc === undefined) {var parent = Object.getPrototypeOf(object);if (parent === null) {return undefined;} else {_x = parent;_x2 = property;_x3 = receiver;_again = true;continue _function;}} else if ("value" in desc) {return desc.value;} else {var getter = desc.get;if (getter === undefined) {return undefined;}return getter.call(receiver);}}};function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { "default": obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}var _colors = require(
-"colors");var _colors2 = _interopRequireDefault(_colors);var _justoResult = require(
-"justo-result");var _ConsoleReporter2 = require(
-"./ConsoleReporter");var _ConsoleReporter3 = _interopRequireDefault(_ConsoleReporter2);var _utilJs = require(
-"../util.js");
+"use strict";var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();Object.defineProperty(exports, "__esModule", { value: true });var _colors = require("colors");var _colors2 = _interopRequireDefault(_colors);var _justoResult = require("justo-result");var _ConsoleReporter2 = require("./ConsoleReporter");var _ConsoleReporter3 = _interopRequireDefault(_ConsoleReporter2);var _util = require("../util.js");function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}
+
+
+
+
 
 
 var DEFAULT_THEME = { 
@@ -53,11 +53,11 @@ var DEFAULT_THEME = {
 
 
 
-ColoredConsoleReporter = (function (_ConsoleReporter) {_inherits(ColoredConsoleReporter, _ConsoleReporter);function ColoredConsoleReporter() {_classCallCheck(this, ColoredConsoleReporter);_get(Object.getPrototypeOf(ColoredConsoleReporter.prototype), "constructor", this).apply(this, arguments);}_createClass(ColoredConsoleReporter, [{ key: "initTheme", value: 
+ColoredConsoleReporter = function (_ConsoleReporter) {_inherits(ColoredConsoleReporter, _ConsoleReporter);function ColoredConsoleReporter() {_classCallCheck(this, ColoredConsoleReporter);return _possibleConstructorReturn(this, Object.getPrototypeOf(ColoredConsoleReporter).apply(this, arguments));}_createClass(ColoredConsoleReporter, [{ key: "initTheme", value: function initTheme(
 
 
 
-    function initTheme(theme) {
+    theme) {
 
       Object.defineProperty(this, "theme", { value: Object.assign({}, DEFAULT_THEME, theme), enumerable: true });
 
@@ -89,7 +89,7 @@ ColoredConsoleReporter = (function (_ConsoleReporter) {_inherits(ColoredConsoleR
             this.theme.task.result = Object.assign({}, DEFAULT_THEME.task.result, task.result);
             this.theme.task.result.ok = Object.assign({}, DEFAULT_THEME.task.result.ok, task.result.ok);
             this.theme.task.result.failed = Object.assign({}, DEFAULT_THEME.task.result.failed, task.result.failed);
-            this.theme.task.result.ignored = Object.assign({}, DEFAULT_THEME.task.result.ignored, task.result.ignored);}}}} }, { key: "endReport", value: 
+            this.theme.task.result.ignored = Object.assign({}, DEFAULT_THEME.task.result.ignored, task.result.ignored);}}}} }, { key: "endReport", value: function endReport() 
 
 
 
@@ -98,76 +98,76 @@ ColoredConsoleReporter = (function (_ConsoleReporter) {_inherits(ColoredConsoleR
 
 
 
-    function endReport() {
+    {
       var rep = this.report;
       var ok = rep.getNumberOf(_justoResult.ResultState.OK);
       var failed = rep.getNumberOf(_justoResult.ResultState.FAILED);
       var ignored = rep.getNumberOf(_justoResult.ResultState.IGNORED);
 
       this.println("");
-      this.print("  " + _colors2["default"][this.theme.task.result.ok.color]("OK") + " " + ok);
-      this.print(" | " + _colors2["default"][this.theme.task.result.failed.color]("Failed") + " " + failed);
-      this.print(" | " + _colors2["default"][this.theme.task.result.ignored.color]("Ignored") + " " + ignored);
+      this.print("  " + _colors2.default[this.theme.task.result.ok.color]("OK") + " " + ok);
+      this.print(" | " + _colors2.default[this.theme.task.result.failed.color]("Failed") + " " + failed);
+      this.print(" | " + _colors2.default[this.theme.task.result.ignored.color]("Ignored") + " " + ignored);
       this.println(" | Total " + (ok + failed + ignored));
-      this.println("");} }, { key: "formatReportPreTitle", value: 
+      this.println("");} }, { key: "formatReportPreTitle", value: function formatReportPreTitle() 
 
 
 
 
 
-    function formatReportPreTitle() {
-      return _colors2["default"][this.theme.report.header.pre.color](this.theme.report.header.pre.text);} }, { key: "formatReportTitle", value: 
+    {
+      return _colors2.default[this.theme.report.header.pre.color](this.theme.report.header.pre.text);} }, { key: "formatReportTitle", value: function formatReportTitle(
 
 
 
 
 
-    function formatReportTitle(title) {
-      return _colors2["default"][this.theme.report.header.title.color](title);} }, { key: "formatReportPostTitle", value: 
+    title) {
+      return _colors2.default[this.theme.report.header.title.color](title);} }, { key: "formatReportPostTitle", value: function formatReportPostTitle() 
 
 
 
 
 
-    function formatReportPostTitle() {
-      return _colors2["default"][this.theme.report.header.post.color](this.theme.report.header.post.text);} }, { key: "formatTaskPreTitle", value: 
+    {
+      return _colors2.default[this.theme.report.header.post.color](this.theme.report.header.post.text);} }, { key: "formatTaskPreTitle", value: function formatTaskPreTitle() 
 
 
 
 
 
-    function formatTaskPreTitle() {
-      return _colors2["default"][this.theme.task.header.pre.color](this.theme.task.header.pre.text);} }, { key: "formatTaskTitle", value: 
+    {
+      return _colors2.default[this.theme.task.header.pre.color](this.theme.task.header.pre.text);} }, { key: "formatTaskTitle", value: function formatTaskTitle(
 
 
 
 
 
-    function formatTaskTitle(title) {
-      return _colors2["default"][this.theme.task.header.title.color](title);} }, { key: "formatTaskResult", value: 
+    title) {
+      return _colors2.default[this.theme.task.header.title.color](title);} }, { key: "formatTaskResult", value: function formatTaskResult(
 
 
 
 
 
-    function formatTaskResult(state) {
+    state) {
       state = state.name.toLowerCase();
-      return _colors2["default"][this.theme.task.result[state].color](this.theme.task.result[state].text);} }, { key: "formatTaskTime", value: 
+      return _colors2.default[this.theme.task.result[state].color](this.theme.task.result[state].text);} }, { key: "formatTaskTime", value: function formatTaskTime(
 
 
 
 
 
-    function formatTaskTime(time) {
-      return _colors2["default"].gray("(" + time + " ms)");} }, { key: "formatTaskError", value: 
+    time) {
+      return _colors2.default.gray("(" + time + " ms)");} }, { key: "formatTaskError", value: function formatTaskError(
 
 
 
 
 
-    function formatTaskError(err, level) {
-      return _colors2["default"][this.theme.task.result.failed.color]((0, _utilJs.indent)(err.toString(), level, "    "));} }], [{ key: "DEFAULT_THEME", get: 
+    err, level) {
+      return _colors2.default[this.theme.task.result.failed.color]((0, _util.indent)(err.toString(), level, "    "));} }], [{ key: "DEFAULT_THEME", get: function get() 
 
 
-    function get() {
-      return DEFAULT_THEME;} }]);return ColoredConsoleReporter;})(_ConsoleReporter3["default"]);exports["default"] = ColoredConsoleReporter;module.exports = exports["default"];
+    {
+      return DEFAULT_THEME;} }]);return ColoredConsoleReporter;}(_ConsoleReporter3.default);exports.default = ColoredConsoleReporter;

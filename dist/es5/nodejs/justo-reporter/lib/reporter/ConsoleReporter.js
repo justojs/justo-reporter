@@ -1,7 +1,7 @@
-"use strict";Object.defineProperty(exports, "__esModule", { value: true });var _createClass = (function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};})();var _get = function get(_x2, _x3, _x4) {var _again = true;_function: while (_again) {var object = _x2, property = _x3, receiver = _x4;desc = parent = getter = undefined;_again = false;if (object === null) object = Function.prototype;var desc = Object.getOwnPropertyDescriptor(object, property);if (desc === undefined) {var parent = Object.getPrototypeOf(object);if (parent === null) {return undefined;} else {_x2 = parent;_x3 = property;_x4 = receiver;_again = true;continue _function;}} else if ("value" in desc) {return desc.value;} else {var getter = desc.get;if (getter === undefined) {return undefined;}return getter.call(receiver);}}};function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { "default": obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}var _justoResult = require(
-"justo-result");var _Reporter2 = require(
-"../Reporter");var _Reporter3 = _interopRequireDefault(_Reporter2);var _util = require(
-"../util");
+"use strict";var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();Object.defineProperty(exports, "__esModule", { value: true });var _justoResult = require("justo-result");var _Reporter2 = require("../Reporter");var _Reporter3 = _interopRequireDefault(_Reporter2);var _util = require("../util");function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self, call) {if (!self) {throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call && (typeof call === "object" || typeof call === "function") ? call : self;}function _inherits(subClass, superClass) {if (typeof superClass !== "function" && superClass !== null) {throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;}
+
+
+
 
 
 var DEFAULT_THEME = { 
@@ -43,7 +43,7 @@ var DEFAULT_THEME = {
 
 
 
-ConsoleReporter = (function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
+ConsoleReporter = function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
 
 
 
@@ -56,16 +56,16 @@ ConsoleReporter = (function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
 
 
 
-  function ConsoleReporter() {var opts = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];_classCallCheck(this, ConsoleReporter);
+  function ConsoleReporter() {var opts = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];_classCallCheck(this, ConsoleReporter);var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ConsoleReporter).call(this, 
 
-    _get(Object.getPrototypeOf(ConsoleReporter.prototype), "constructor", this).call(this, opts);
+    opts));
 
 
     if (!opts) opts = {};
 
-    Object.defineProperty(this, "print", { value: process.stdout.write.bind(process.stdout), writable: true });
-    Object.defineProperty(this, "println", { value: console.log, writable: true });
-    this.initTheme(opts.theme);}_createClass(ConsoleReporter, [{ key: "initTheme", value: 
+    Object.defineProperty(_this, "print", { value: process.stdout.write.bind(process.stdout), writable: true });
+    Object.defineProperty(_this, "println", { value: console.log, writable: true });
+    _this.initTheme(opts.theme);return _this;}_createClass(ConsoleReporter, [{ key: "initTheme", value: function initTheme(
 
 
 
@@ -73,7 +73,7 @@ ConsoleReporter = (function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
 
 
 
-    function initTheme(theme) {
+    theme) {
 
       Object.defineProperty(this, "theme", { value: Object.assign({}, DEFAULT_THEME, theme), enumerable: true });
 
@@ -102,7 +102,7 @@ ConsoleReporter = (function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
             this.theme.task.result = Object.assign({}, DEFAULT_THEME.task.result, task.result);
             this.theme.task.result.ok = Object.assign({}, DEFAULT_THEME.task.result.ok, task.result.ok);
             this.theme.task.result.failed = Object.assign({}, DEFAULT_THEME.task.result.failed, task.result.failed);
-            this.theme.task.result.ignored = Object.assign({}, DEFAULT_THEME.task.result.ignored, task.result.ignored);}}}} }, { key: "startReport", value: 
+            this.theme.task.result.ignored = Object.assign({}, DEFAULT_THEME.task.result.ignored, task.result.ignored);}}}} }, { key: "startReport", value: function startReport(
 
 
 
@@ -111,19 +111,19 @@ ConsoleReporter = (function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
 
 
 
-    function startReport(title) {
+    title) {
       this.println(
       "\n  " + 
       this.formatReportPreTitle() + 
       this.formatReportTitle(title) + 
-      this.formatReportPostTitle());} }, { key: "endReport", value: 
+      this.formatReportPostTitle());} }, { key: "endReport", value: function endReport() 
 
 
 
 
 
 
-    function endReport() {
+    {
       var rep = this.report;
       var ok = rep.getNumberOf(_justoResult.ResultState.OK);
       var failed = rep.getNumberOf(_justoResult.ResultState.FAILED);
@@ -134,18 +134,18 @@ ConsoleReporter = (function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
       this.print(" | Failed " + failed);
       this.print(" | Ignored " + ignored);
       this.println(" | Total " + (ok + failed + ignored));
-      this.println("");} }, { key: "startTask", value: 
+      this.println("");} }, { key: "startTask", value: function startTask(
 
 
 
 
 
-    function startTask(title, task) {
+    title, task) {
       if (task.isComposite()) {
         this.println(
         "  ".repeat(this.stack.length) + 
         this.formatTaskPreTitle() + 
-        this.formatTaskTitle(title));}} }, { key: "endTask", value: 
+        this.formatTaskTitle(title));}} }, { key: "endTask", value: function endTask(
 
 
 
@@ -153,7 +153,7 @@ ConsoleReporter = (function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
 
 
 
-    function endTask(res) {
+    res) {
       if (res.task.isSimple()) {
         this.println(
         "  ".repeat(res.level) + 
@@ -163,76 +163,76 @@ ConsoleReporter = (function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
         " " + this.formatTaskTime(res.time));
 
 
-        if (res.state === _justoResult.ResultState.FAILED) this.println(this.formatTaskError(res.error, res.level));}} }, { key: "ignoreTask", value: 
+        if (res.state === _justoResult.ResultState.FAILED) this.println(this.formatTaskError(res.error, res.level));}} }, { key: "ignoreTask", value: function ignoreTask(
 
 
 
 
 
 
-    function ignoreTask(res) {
+    res) {
       this.println(
       "  ".repeat(res.level) + 
       this.formatTaskResult(_justoResult.ResultState.IGNORED) + 
-      " " + this.formatTaskTitle(res.title));} }, { key: "formatReportPreTitle", value: 
+      " " + this.formatTaskTitle(res.title));} }, { key: "formatReportPreTitle", value: function formatReportPreTitle() 
 
 
 
 
 
 
-    function formatReportPreTitle() {
-      return this.theme.report.header.pre.text;} }, { key: "formatReportPostTitle", value: 
+    {
+      return this.theme.report.header.pre.text;} }, { key: "formatReportPostTitle", value: function formatReportPostTitle() 
 
 
 
 
 
-    function formatReportPostTitle() {
-      return this.theme.report.header.post.text;} }, { key: "formatReportTitle", value: 
+    {
+      return this.theme.report.header.post.text;} }, { key: "formatReportTitle", value: function formatReportTitle(
 
 
 
 
 
-    function formatReportTitle(title) {
-      return title;} }, { key: "formatTaskPreTitle", value: 
+    title) {
+      return title;} }, { key: "formatTaskPreTitle", value: function formatTaskPreTitle() 
 
 
 
 
 
-    function formatTaskPreTitle() {
-      return this.theme.task.header.pre.text;} }, { key: "formatTaskTitle", value: 
+    {
+      return this.theme.task.header.pre.text;} }, { key: "formatTaskTitle", value: function formatTaskTitle(
 
 
 
 
 
-    function formatTaskTitle(title) {
-      return title;} }, { key: "formatTaskResult", value: 
+    title) {
+      return title;} }, { key: "formatTaskResult", value: function formatTaskResult(
 
 
 
 
 
-    function formatTaskResult(state) {
-      return this.theme.task.result[state.name.toLowerCase()].text;} }, { key: "formatTaskTime", value: 
+    state) {
+      return this.theme.task.result[state.name.toLowerCase()].text;} }, { key: "formatTaskTime", value: function formatTaskTime(
 
 
 
 
 
-    function formatTaskTime(time) {
-      return "(" + time + " ms)";} }, { key: "formatTaskError", value: 
+    time) {
+      return "(" + time + " ms)";} }, { key: "formatTaskError", value: function formatTaskError(
 
 
 
 
 
-    function formatTaskError(err, level) {
-      return (0, _util.indent)(err.toString(), level, "    ");} }], [{ key: "DEFAULT_THEME", get: 
+    err, level) {
+      return (0, _util.indent)(err.toString(), level, "    ");} }], [{ key: "DEFAULT_THEME", get: function get() 
 
 
-    function get() {
-      return DEFAULT_THEME;} }]);return ConsoleReporter;})(_Reporter3["default"]);exports["default"] = ConsoleReporter;module.exports = exports["default"];
+    {
+      return DEFAULT_THEME;} }]);return ConsoleReporter;}(_Reporter3.default);exports.default = ConsoleReporter;

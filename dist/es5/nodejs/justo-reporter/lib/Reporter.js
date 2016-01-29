@@ -1,7 +1,7 @@
-"use strict";Object.defineProperty(exports, "__esModule", { value: true });var _createClass = (function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};})();function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { "default": obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}var _justoResult = require(
-"justo-result");var _Report = require(
-"./Report");var _Report2 = _interopRequireDefault(_Report);var _Stack = require(
-"./Stack");var _Stack2 = _interopRequireDefault(_Stack);
+"use strict";var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();Object.defineProperty(exports, "__esModule", { value: true });var _justoResult = require("justo-result");var _Report = require("./Report");var _Report2 = _interopRequireDefault(_Report);var _Stack = require("./Stack");var _Stack2 = _interopRequireDefault(_Stack);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}
+
+
+
 
 
 var startReport = Symbol();
@@ -18,7 +18,7 @@ var endReport = Symbol();var
 
 
 
-Reporter = (function () {
+Reporter = function () {
 
 
 
@@ -39,8 +39,8 @@ Reporter = (function () {
 
     Object.defineProperty(this, "name", { value: opts.name || "reporter", enumerable: true });
     Object.defineProperty(this, "enabled", { value: opts.hasOwnProperty("enabled") ? !!opts.enabled : true, enumerable: true });
-    Object.defineProperty(this, "stack", { value: new _Stack2["default"]() });
-    Object.defineProperty(this, "_report", { value: undefined, writable: true });}_createClass(Reporter, [{ key: "start", value: 
+    Object.defineProperty(this, "stack", { value: new _Stack2.default() });
+    Object.defineProperty(this, "_report", { value: undefined, writable: true });}_createClass(Reporter, [{ key: "start", value: function start(
 
 
 
@@ -81,14 +81,14 @@ Reporter = (function () {
 
 
 
-    function start(title, task) {
+    title, task) {
 
       if (this.disabled) return;
 
 
       if (arguments.length === 0) throw new Error("Invalid number of arguments. Expected at least one.");else 
       if (arguments.length === 1) this[startReport](title);else 
-      this[startTask](title, task);} }, { key: "end", value: 
+      this[startTask](title, task);} }, { key: "end", value: function end() 
 
 
 
@@ -104,22 +104,22 @@ Reporter = (function () {
 
 
 
-    function end() {
+    {
 
-      if (this.disabled) return;for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {args[_key] = arguments[_key];}
-
-
-      if (args.length === 0) this[endReport]();else 
-      this[endTask].apply(this, args);} }, { key: "ignore", value: 
+      if (this.disabled) return;
 
 
+      if (arguments.length === 0) this[endReport]();else 
+      this[endTask].apply(this, arguments);} }, { key: "ignore", value: function ignore(
 
 
 
 
 
 
-    function ignore(title, task) {
+
+
+    title, task) {
       var res, parent;
 
 
@@ -144,7 +144,7 @@ Reporter = (function () {
 
 
 
-      this.ignoreTask(res);} }, { key: "ignoreTask", value: 
+      this.ignoreTask(res);} }, { key: "ignoreTask", value: function ignoreTask(
 
 
 
@@ -153,7 +153,7 @@ Reporter = (function () {
 
 
 
-    function ignoreTask(res) {} }, { key: 
+    res) {} }, { key: 
 
 
 
@@ -167,8 +167,8 @@ Reporter = (function () {
         if (this.started) {
           throw new Error("Report already started.");} else 
         {
-          this._report = new _Report2["default"](title);
-          this.startReport(title);}}} }, { key: "startReport", value: 
+          this._report = new _Report2.default(title);
+          this.startReport(title);}}} }, { key: "startReport", value: function startReport(
 
 
 
@@ -179,7 +179,7 @@ Reporter = (function () {
 
 
 
-    function startReport(title) {} }, { key: 
+    title) {} }, { key: 
 
 
 
@@ -197,7 +197,7 @@ Reporter = (function () {
 
 
       this.endReport();
-      this._report = undefined;} }, { key: "endReport", value: 
+      this._report = undefined;} }, { key: "endReport", value: function endReport() 
 
 
 
@@ -205,7 +205,7 @@ Reporter = (function () {
 
 
 
-    function endReport() {} }, { key: 
+    {} }, { key: 
 
 
 
@@ -233,7 +233,7 @@ Reporter = (function () {
       this.stack.push(res);
 
 
-      this.startTask(title, task);} }, { key: "startTask", value: 
+      this.startTask(title, task);} }, { key: "startTask", value: function startTask(
 
 
 
@@ -243,7 +243,7 @@ Reporter = (function () {
 
 
 
-    function startTask(title, task) {} }, { key: 
+    title, task) {} }, { key: 
 
 
 
@@ -269,7 +269,7 @@ Reporter = (function () {
 
 
 
-      this.endTask(res);} }, { key: "endTask", value: 
+      this.endTask(res);} }, { key: "endTask", value: function endTask(
 
 
 
@@ -278,4 +278,4 @@ Reporter = (function () {
 
 
 
-    function endTask(res) {} }, { key: "report", get: function get() {return this._report;} }, { key: "started", get: function get() {return !!this.report;} }, { key: "disabled", get: function get() {return !this.enabled;} }]);return Reporter;})();exports["default"] = Reporter;module.exports = exports["default"];
+    res) {} }, { key: "report", get: function get() {return this._report;} }, { key: "started", get: function get() {return !!this.report;} }, { key: "disabled", get: function get() {return !this.enabled;} }]);return Reporter;}();exports.default = Reporter;

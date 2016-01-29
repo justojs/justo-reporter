@@ -1,5 +1,4 @@
-"use strict";Object.defineProperty(exports, "__esModule", { value: true });var _createClass = (function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};})();function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}var _justoResult = require(
-"justo-result");var 
+"use strict";var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();Object.defineProperty(exports, "__esModule", { value: true });var _justoResult = require("justo-result");function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}var 
 
 
 
@@ -7,13 +6,14 @@
 
 
 
-Report = (function () {
+
+Report = function () {
 
 
 
   function Report(title) {_classCallCheck(this, Report);
     Object.defineProperty(this, "title", { value: title, enumerable: true });
-    Object.defineProperty(this, "results", { value: new _justoResult.Results() });}_createClass(Report, [{ key: "add", value: 
+    Object.defineProperty(this, "results", { value: new _justoResult.Results() });}_createClass(Report, [{ key: "add", value: function add(
 
 
 
@@ -30,12 +30,12 @@ Report = (function () {
 
 
 
-    function add(result) {
-      this.results.push(result);} }, { key: "getNumberOf", value: 
+    result) {
+      this.results.push(result);} }, { key: "getNumberOf", value: function getNumberOf(
 
 
 
 
 
-    function getNumberOf(state) {
-      return this.results.getNumberOf(state);} }, { key: "length", get: function get() {return this.results.length;} }]);return Report;})();exports["default"] = Report;module.exports = exports["default"];
+    state) {
+      return this.results.getNumberOf(state);} }, { key: "length", get: function get() {return this.results.length;} }]);return Report;}();exports.default = Report;
