@@ -31,7 +31,7 @@ Report = function () {
 
 
     result) {
-      this.results.push(result);} }, { key: "getNumberOf", value: function getNumberOf(
+      this.results.add(result);} }, { key: "getNumberOf", value: function getNumberOf(
 
 
 
