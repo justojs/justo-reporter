@@ -24,7 +24,8 @@ module.exports = function(grunt) {
           "build/es5/lib/Stack.js": "lib/Stack.js",
           "build/es5/lib/util.js": "lib/util.js",
           "build/es5/lib/reporter/ConsoleReporter.js": "lib/reporter/ConsoleReporter.js",
-          "build/es5/lib/reporter/ColoredConsoleReporter.js": "lib/reporter/ColoredConsoleReporter.js"
+          "build/es5/lib/reporter/ColoredConsoleReporter.js": "lib/reporter/ColoredConsoleReporter.js",
+          "build/es5/lib/reporter/StateReporter.js": "lib/reporter/StateReporter.js",
         }
       }
     },

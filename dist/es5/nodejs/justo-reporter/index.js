@@ -9,4 +9,9 @@ var reporter = exports.reporter = {
 
   get ColoredConsoleReporter() {
     "use strict";
-    return require("./lib/reporter/ColoredConsoleReporter").default;} };
+    return require("./lib/reporter/ColoredConsoleReporter").default;}, 
+
+
+  get StateReporter() {
+    "use strict";
+    return require("./lib/reporter/StateReporter").default;} };
