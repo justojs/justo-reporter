@@ -23,4 +23,4 @@ StateReporter = function (_Reporter) {_inherits(StateReporter, _Reporter);
 
 
     res) {
-      if (res.state == _justoResult.ResultState.FAILED) this.state = _justoResult.ResultState.FAILED;} }]);return StateReporter;}(_Reporter3.default);exports.default = StateReporter;
+      if (res.state === _justoResult.ResultState.FAILED) this.state = _justoResult.ResultState.FAILED;} }]);return StateReporter;}(_Reporter3.default);exports.default = StateReporter;

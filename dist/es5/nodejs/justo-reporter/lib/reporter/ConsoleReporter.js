@@ -154,7 +154,7 @@ ConsoleReporter = function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
 
 
     res) {
-      if (res.task.isSimple()) {
+      if (res.isSimple()) {
         this.println(
         "  ".repeat(res.level) + 
         this.formatTaskPreTitle() + 
@@ -163,7 +163,19 @@ ConsoleReporter = function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
         " " + this.formatTaskTime(res.time));
 
 
-        if (res.state === _justoResult.ResultState.FAILED) this.println(this.formatTaskError(res.error, res.level));}} }, { key: "ignoreTask", value: function ignoreTask(
+        if (res.state === _justoResult.ResultState.FAILED) this.println(this.formatTaskError(res.error, res.level));} else 
+      {
+        if (res.ownState === _justoResult.ResultState.FAILED) {
+          this.println(
+          "  ".repeat(res.level + 1) + 
+          this.formatTaskPreTitle() + 
+          this.formatTaskResult(res.ownState) + 
+          " " + this.formatTaskTitle("Workflow function") + 
+          " " + this.formatTaskTime(res.time));
+
+
+          if (res.ownError) this.println(this.formatTaskError(res.ownError, res.level));}}} }, { key: "ignoreTask", value: function ignoreTask(
+
 
 
 
@@ -231,7 +243,7 @@ ConsoleReporter = function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
 
 
     err, level) {
-      return (0, _util.indent)(err.toString(), level, "    ");} }], [{ key: "DEFAULT_THEME", get: function get() 
+      return (0, _util.indent)(this.stackTrace ? err.stack : err.toString(), level + 1, "  ");} }], [{ key: "DEFAULT_THEME", get: function get() 
 
 
     {

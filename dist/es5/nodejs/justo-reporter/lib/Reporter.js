@@ -40,6 +40,7 @@ Reporter = function () {
     Object.defineProperty(this, "name", { value: opts.name || "reporter", enumerable: true });
     Object.defineProperty(this, "enabled", { value: opts.hasOwnProperty("enabled") ? !!opts.enabled : true, enumerable: true });
     Object.defineProperty(this, "stack", { value: new _Stack2.default() });
+    Object.defineProperty(this, "stackTrace", { value: opts.hasOwnProperty("stackTrace") ? !!opts.stackTrace : true });
     Object.defineProperty(this, "_report", { value: undefined, writable: true });}_createClass(Reporter, [{ key: "start", value: function start(
 
 
@@ -261,12 +262,10 @@ Reporter = function () {
 
 
 
-      if (res instanceof _justoResult.SimpleTaskResult) res.setResult(state, error, start, end);
+      if (res.isSimple() || state === _justoResult.ResultState.FAILED) res.setResult(state, error, start, end);
 
 
-      if (!res.hasParent()) {
-        this.report.add(res);}
-
+      if (!res.hasParent()) this.report.add(res);
 
 
       this.endTask(res);} }, { key: "endTask", value: function endTask(

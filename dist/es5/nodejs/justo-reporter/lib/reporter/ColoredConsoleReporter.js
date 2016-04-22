@@ -166,7 +166,7 @@ ColoredConsoleReporter = function (_ConsoleReporter) {_inherits(ColoredConsoleRe
 
 
     err, level) {
-      return _colors2.default[this.theme.task.result.failed.color]((0, _util.indent)(err.toString(), level, "    "));} }], [{ key: "DEFAULT_THEME", get: function get() 
+      return _colors2.default[this.theme.task.result.failed.color]((0, _util.indent)(this.stackTrace ? err.stack : err.toString(), level + 1, "  "));} }], [{ key: "DEFAULT_THEME", get: function get() 
 
 
     {
