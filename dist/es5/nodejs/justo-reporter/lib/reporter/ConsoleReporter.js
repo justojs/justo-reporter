@@ -243,7 +243,7 @@ ConsoleReporter = function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
 
 
     err, level) {
-      return (0, _util.indent)(this.stackTrace ? err.stack : err.toString(), level + 1, "  ");} }], [{ key: "DEFAULT_THEME", get: function get() 
+      return (0, _util.indent)(this.stackTrace ? err.stack || err.toString() : err.toString(), level + 1, "  ");} }], [{ key: "DEFAULT_THEME", get: function get() 
 
 
     {

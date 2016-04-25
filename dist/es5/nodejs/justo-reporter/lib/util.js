@@ -9,9 +9,13 @@ indent = indent;function indent(txt) {var level = arguments.length <= 1 || argum
   var pre;
 
 
-  pre = "";
-  for (var i = 0; i < level; ++i) {pre += itxt;}
-  txt = txt.replace(/^/gm, pre);
+  if (txt) {
+    pre = "";
+    for (var i = 0; i < level; ++i) {pre += itxt;}
+    txt = txt.replace(/^/gm, pre);} else 
+  {
+    txt = "";}
+
 
 
   return txt;}
