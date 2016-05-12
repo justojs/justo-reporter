@@ -83,9 +83,15 @@ describe("ColoredConsoleReporter", function() {
         disabled: true,
         stack: [],
         theme: {
-          report: DEFAULT_THEME.report,
+          header: DEFAULT_THEME.header,
           task: {
+            title: {
+              simple: "white",
+              composite: "black"
+            },
             result: {
+              location: DEFAULT_THEME.task.result.location,
+              between: DEFAULT_THEME.task.result.between,
               ok: {text: "OK", color: "black"},
               failed: {text: "FAILED", color: "blue"},
               ignored: {text: "IGNORED", color: "blue"}
@@ -113,7 +119,7 @@ describe("ColoredConsoleReporter", function() {
       rep.spy.called("println()").must.be.eq(2);
       rep.spy.called("print()").must.be.eq(0);
       rep.spy.getArguments("println()", 0)[0].must.match(/.+Test report.+/);
-      rep.spy.getArguments("println()", 1)[0].must.match(/^.+V.+ .+test.+ .+\([0-9]+ ms\).+$/);
+      rep.spy.getArguments("println()", 1)[0].must.match(/^\[ .+OK.+ \] .+test.+ .+\([0-9]+ ms\).+$/);
     });
 
     it("endTask() - FAILED", function() {
@@ -126,7 +132,7 @@ describe("ColoredConsoleReporter", function() {
       rep.spy.called("print()").must.be.eq(0);
       rep.spy.called("println()").must.be.eq(3);
       rep.spy.getArguments("println()", 0)[0].must.match(/.+Test report.+/);
-      rep.spy.getArguments("println()", 1)[0].must.match(/^.+X.+ .+test.+ .+\([0-9]+ ms\).+$/);
+      rep.spy.getArguments("println()", 1)[0].must.match(/^\[ .+ER.+ \] .+test.+ .+\([0-9]+ ms\).+$/);
       rep.spy.getArguments("println()", 2)[0].must.match(/Error: Syntax error\./);
     });
   });

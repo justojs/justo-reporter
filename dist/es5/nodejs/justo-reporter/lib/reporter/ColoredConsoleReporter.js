@@ -6,42 +6,29 @@ var _util = require("../util.js");function _interopRequireDefault(obj) {return o
 
 
 var DEFAULT_THEME = { 
-  report: { 
-    header: { 
-      title: { 
-        color: "yellow" }, 
-
-      pre: { 
-        text: "", 
-        color: "yellow" }, 
-
-      post: { 
-        text: "", 
-        color: "yellow" } } }, 
-
+  header: { 
+    title: { 
+      color: "yellow" } }, 
 
 
   task: { 
-    header: { 
-      title: { 
-        color: "white" }, 
-
-      pre: { 
-        text: "", 
-        color: "white" } }, 
-
+    title: { 
+      simple: "white", 
+      composite: "black" }, 
 
     result: { 
+      location: "pre", 
+      between: ["[ ", " ]"], 
       ok: { 
-        text: "V", 
+        text: "OK", 
         color: "green" }, 
 
       failed: { 
-        text: "X", 
+        text: "ER", 
         color: "red" }, 
 
       ignored: { 
-        text: "I", 
+        text: "IG", 
         color: "grey" } } } };var 
 
 
@@ -53,46 +40,15 @@ var DEFAULT_THEME = {
 
 
 
-ColoredConsoleReporter = function (_ConsoleReporter) {_inherits(ColoredConsoleReporter, _ConsoleReporter);function ColoredConsoleReporter() {_classCallCheck(this, ColoredConsoleReporter);return _possibleConstructorReturn(this, Object.getPrototypeOf(ColoredConsoleReporter).apply(this, arguments));}_createClass(ColoredConsoleReporter, [{ key: "initTheme", value: function initTheme(
+ColoredConsoleReporter = function (_ConsoleReporter) {_inherits(ColoredConsoleReporter, _ConsoleReporter);function ColoredConsoleReporter() {_classCallCheck(this, ColoredConsoleReporter);return _possibleConstructorReturn(this, Object.getPrototypeOf(ColoredConsoleReporter).apply(this, arguments));}_createClass(ColoredConsoleReporter, [{ key: "getDefaultTheme", value: function getDefaultTheme() 
 
 
 
-    theme) {
-
-      Object.defineProperty(this, "theme", { value: Object.assign({}, DEFAULT_THEME, theme), enumerable: true });
-
-
-      if (theme) {
-        if (theme.report) {
-          var report = theme.report;
-
-          this.theme.report.header = Object.assign({}, DEFAULT_THEME.report.header, report.header);
-
-          if (report.header) {
-            this.theme.report.header.title = Object.assign({}, DEFAULT_THEME.report.header.title, report.header.title);
-            this.theme.report.header.pre = Object.assign({}, DEFAULT_THEME.report.header.pre, report.header.pre);
-            this.theme.report.header.post = Object.assign({}, DEFAULT_THEME.report.header.post, report.header.post);}}
 
 
 
-        if (theme.task) {
-          var task = theme.task;
-
-
-          if (task.header) {
-            this.theme.task.title = Object.assign({}, DEFAULT_THEME.task.title, task.title);
-            this.theme.task.header = Object.assign({}, DEFAULT_THEME.task.header, task.header);
-            this.theme.task.header.pre = Object.assign({}, DEFAULT_THEME.task.header.pre, task.header.pre);}
-
-
-          if (task.result) {
-            this.theme.task.result = Object.assign({}, DEFAULT_THEME.task.result, task.result);
-            this.theme.task.result.ok = Object.assign({}, DEFAULT_THEME.task.result.ok, task.result.ok);
-            this.theme.task.result.failed = Object.assign({}, DEFAULT_THEME.task.result.failed, task.result.failed);
-            this.theme.task.result.ignored = Object.assign({}, DEFAULT_THEME.task.result.ignored, task.result.ignored);}}}} }, { key: "endReport", value: function endReport() 
-
-
-
+    {
+      return JSON.parse(JSON.stringify(DEFAULT_THEME));} }, { key: "endReport", value: function endReport() 
 
 
 
@@ -109,42 +65,28 @@ ColoredConsoleReporter = function (_ConsoleReporter) {_inherits(ColoredConsoleRe
       this.print(" | " + _colors2.default[this.theme.task.result.failed.color]("Failed") + " " + failed);
       this.print(" | " + _colors2.default[this.theme.task.result.ignored.color]("Ignored") + " " + ignored);
       this.println(" | Total " + (ok + failed + ignored));
-      this.println("");} }, { key: "formatReportPreTitle", value: function formatReportPreTitle() 
-
-
-
-
-
-    {
-      return _colors2.default[this.theme.report.header.pre.color](this.theme.report.header.pre.text);} }, { key: "formatReportTitle", value: function formatReportTitle(
+      this.println("");} }, { key: "formatReportTitle", value: function formatReportTitle(
 
 
 
 
 
     title) {
-      return _colors2.default[this.theme.report.header.title.color](title);} }, { key: "formatReportPostTitle", value: function formatReportPostTitle() 
-
-
-
-
-
-    {
-      return _colors2.default[this.theme.report.header.post.color](this.theme.report.header.post.text);} }, { key: "formatTaskPreTitle", value: function formatTaskPreTitle() 
-
-
-
-
-
-    {
-      return _colors2.default[this.theme.task.header.pre.color](this.theme.task.header.pre.text);} }, { key: "formatTaskTitle", value: function formatTaskTitle(
+      return _colors2.default[this.theme.header.title.color](title);} }, { key: "formatSimpleTaskTitle", value: function formatSimpleTaskTitle(
 
 
 
 
 
     title) {
-      return _colors2.default[this.theme.task.header.title.color](title);} }, { key: "formatTaskResult", value: function formatTaskResult(
+      return _colors2.default[this.theme.task.title.simple](title);} }, { key: "formatCompositeTaskTitle", value: function formatCompositeTaskTitle(
+
+
+
+
+
+    title) {
+      return _colors2.default[this.theme.task.title.composite](title);} }, { key: "formatTaskResult", value: function formatTaskResult(
 
 
 

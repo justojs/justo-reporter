@@ -1,11 +1,11 @@
 {
   "name": "justo-reporter",
-  "version": "0.8.14",
+  "version": "0.9.0",
   "description": "The Justo.js reporter library.",
   "homepage": "http://www.justojs.org",
   "author": {
     "name": "Justo Labs",
-    "email": "justojs@justolabs.com",
+    "email": "info@justolabs.com",
     "url": "http://www.justojs.org"
   },
   "contributors": [
@@ -32,7 +32,8 @@
     "npm": ">=3.0.0"
   },
   "dependencies": {
-    "colors": "*"
+    "colors": "*",
+    "deep-assign": "*"
   },
   "peerDependencies": {
     "justo-result": "*"

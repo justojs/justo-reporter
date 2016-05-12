@@ -63,19 +63,12 @@ describe("ConsoleReporter", function() {
       });
     });
 
-    it("constructor(opts) - with report", function() {
+    it("constructor(opts) - with header", function() {
       var rep = new ConsoleReporter({
         enabled: false,
         theme: {
-          report: {
-            header: {
-              pre: {
-                text: "="
-              },
-              post: {
-                text: "="
-              }
-            }
+          header: {
+
           }
         }
       });
@@ -84,19 +77,7 @@ describe("ConsoleReporter", function() {
         enabled: false,
         disabled: true,
         stack: [],
-        theme: {
-          report: {
-            header: {
-              pre: {
-                text: "="
-              },
-              post: {
-                text: "="
-              }
-            },
-          },
-          task: DEFAULT_THEME.task
-        }
+        theme: DEFAULT_THEME
       });
     });
 
@@ -105,43 +86,43 @@ describe("ConsoleReporter", function() {
         enabled: false,
         theme: {
           task: {
-            header: {
-              pre: {
-                text: "="
-              }
-            },
+            title: {},
             result: {
               ok: {
-                text: "OK"
+                text: "V"
               },
               failed: {
-                text: "FAILED"
+                text: "X"
+              },
+              ignored: {
+                text: "-"
               }
             }
           }
         }
       });
+
       rep.must.have({
         name: "reporter",
         enabled: false,
         disabled: true,
         stack: [],
         theme: {
-          report: DEFAULT_THEME.report,
+          header: DEFAULT_THEME.header,
           task: {
-            header: {
-              pre: {
-                text: "="
-              }
-            },
+            title: DEFAULT_THEME.task.title,
             result: {
+              location: DEFAULT_THEME.task.result.location,
+              between: DEFAULT_THEME.task.result.between,
               ok: {
-                text: "OK"
+                text: "V"
               },
               failed: {
-                text: "FAILED"
+                text: "X"
               },
-              ignored: DEFAULT_THEME.task.result.ignored
+              ignored: {
+                text: "-"
+              }
             }
           }
         }
@@ -207,7 +188,7 @@ describe("ConsoleReporter", function() {
       rep.spy.called("print()").must.be.eq(0);
       rep.spy.called("println()").must.be.eq(2);
       rep.spy.getArguments("println()", 0).must.be.eq(["\n  Test report"]);
-      rep.spy.getArguments("println()", 1)[0].must.match(/^  V test \([0-9]+ ms\)$/);
+      rep.spy.getArguments("println()", 1)[0].must.match(/^\[ OK \] test \([0-9]+ ms\)$/);
     });
 
     it("endTask() - FAILED", function() {
@@ -220,7 +201,7 @@ describe("ConsoleReporter", function() {
       rep.spy.called("print()").must.be.eq(0);
       rep.spy.called("println()").must.be.eq(3);
       rep.spy.getArguments("println()", 0).must.be.eq(["\n  Test report"]);
-      rep.spy.getArguments("println()", 1)[0].must.match(/^  X test \([0-9]+ ms\)$/);
+      rep.spy.getArguments("println()", 1)[0].must.match(/^\[ ER \] test \([0-9]+ ms\)$/);
       rep.spy.getArguments("println()", 2)[0].must.match(/Error: Syntax error\./);
     });
   });
