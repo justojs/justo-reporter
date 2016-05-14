@@ -190,10 +190,10 @@ ConsoleReporter = function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
 
       if (res.ownState === _justoResult.ResultState.FAILED) {
         if (result.location == "pre") {
-          this.printSimpleResult(res.level, res.ownState, "Workflow function", res.time);} else 
+          this[printSimpleResult](res.level, res.ownState, "Workflow function", res.time);} else 
         {
-          this.printSimpleResultStart(res.level, "Workflow function");
-          this.printSimpleResultEnd(res.ownState, res.time);}
+          this[printSimpleResultStart](res.level, "Workflow function");
+          this[printSimpleResultEnd](res.ownState, res.time);}
 
 
         if (res.ownError) this[printError](res.level, res.ownError);}} }, { key: 
