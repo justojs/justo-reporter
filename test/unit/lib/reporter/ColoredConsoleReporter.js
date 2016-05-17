@@ -71,7 +71,8 @@ describe("ColoredConsoleReporter", function() {
             result: {
               ok: {text: "OK", color: "black"},
               failed: {text: "FAILED", color: "blue"},
-              ignored: {text: "IGNORED", color: "blue"}
+              ignored: {text: "IGNORED", color: "blue"},
+              running: {text: "RUNNING", color: "cyan"}
             }
           }
         }
@@ -86,15 +87,15 @@ describe("ColoredConsoleReporter", function() {
           header: DEFAULT_THEME.header,
           task: {
             title: {
-              simple: "white",
-              composite: "black"
+              simple: DEFAULT_THEME.task.title.simple,
+              composite: DEFAULT_THEME.task.title.composite
             },
             result: {
-              location: DEFAULT_THEME.task.result.location,
               between: DEFAULT_THEME.task.result.between,
               ok: {text: "OK", color: "black"},
               failed: {text: "FAILED", color: "blue"},
-              ignored: {text: "IGNORED", color: "blue"}
+              ignored: {text: "IGNORED", color: "blue"},
+              running: {text: "RUNNING", color: "cyan"}
             }
           }
         }
@@ -106,7 +107,7 @@ describe("ColoredConsoleReporter", function() {
     var rep;
 
     beforeEach(function() {
-      rep = spy(new ColoredConsoleReporter(), ["endTask()", "print() {}", "println() {}"]);
+      rep = spy(new ColoredConsoleReporter(), ["endTask() {}"]);
     });
 
     it("endTask() - OK", function() {
@@ -116,10 +117,6 @@ describe("ColoredConsoleReporter", function() {
       rep.end(task, ResultState.OK, undefined, Date.now(), Date.now() + 10);
 
       rep.spy.called("endTask()").must.be.eq(1);
-      rep.spy.called("println()").must.be.eq(2);
-      rep.spy.called("print()").must.be.eq(0);
-      rep.spy.getArguments("println()", 0)[0].must.match(/.+Test report.+/);
-      rep.spy.getArguments("println()", 1)[0].must.match(/^\[ .+OK.+ \] .+test.+ .+\([0-9]+ ms\).+$/);
     });
 
     it("endTask() - FAILED", function() {
@@ -128,12 +125,6 @@ describe("ColoredConsoleReporter", function() {
       rep.end(task, ResultState.FAILED, new Error("Syntax error."), 0, 10);
 
       rep.spy.called("endTask()").must.be.eq(1);
-
-      rep.spy.called("print()").must.be.eq(0);
-      rep.spy.called("println()").must.be.eq(3);
-      rep.spy.getArguments("println()", 0)[0].must.match(/.+Test report.+/);
-      rep.spy.getArguments("println()", 1)[0].must.match(/^\[ .+ER.+ \] .+test.+ .+\([0-9]+ ms\).+$/);
-      rep.spy.getArguments("println()", 2)[0].must.match(/Error: Syntax error\./);
     });
   });
 });

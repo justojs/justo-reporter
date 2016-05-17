@@ -96,6 +96,9 @@ describe("ConsoleReporter", function() {
               },
               ignored: {
                 text: "-"
+              },
+              running: {
+                text: "R"
               }
             }
           }
@@ -112,7 +115,6 @@ describe("ConsoleReporter", function() {
           task: {
             title: DEFAULT_THEME.task.title,
             result: {
-              location: DEFAULT_THEME.task.result.location,
               between: DEFAULT_THEME.task.result.between,
               ok: {
                 text: "V"
@@ -122,6 +124,9 @@ describe("ConsoleReporter", function() {
               },
               ignored: {
                 text: "-"
+              },
+              running: {
+                text: "R"
               }
             }
           }
@@ -134,7 +139,7 @@ describe("ConsoleReporter", function() {
     var rep;
 
     beforeEach(function() {
-      rep = spy(new ConsoleReporter(), ["startReport()", "endReport()", "print() {}", "println() {}"]);
+      rep = spy(new ConsoleReporter(), ["startReport() {}", "endReport() {}"]);
     });
 
     it("#startReport()", function() {
@@ -142,11 +147,6 @@ describe("ConsoleReporter", function() {
 
       rep.spy.called("startReport()").must.be.eq(1);
       rep.spy.calledWith("startReport()", ["Test report"]).must.be.eq(1);
-      rep.spy.called("endReport()").must.be.eq(0);
-
-      rep.spy.called("print()").must.be.eq(0);
-      rep.spy.called("println()").must.be.eq(1);
-      rep.spy.getArguments("println()").must.be.eq(["\n  Test report"]);
       rep.spy.called("endReport()").must.be.eq(0);
     });
 
@@ -158,16 +158,6 @@ describe("ConsoleReporter", function() {
       rep.spy.getArguments("startReport()").must.be.eq(["Test report"]);
       rep.spy.called("endReport()").must.be.eq(1);
       rep.spy.calledWith("endReport()", []).must.be.eq(1);
-
-      rep.spy.called("print()").must.be.eq(3);
-      rep.spy.called("println()").must.be.eq(4);
-      rep.spy.getArguments("println()", 0).must.be.eq(["\n  Test report"]);
-      rep.spy.getArguments("println()", 1).must.be.eq([""]);
-      rep.spy.getArguments("print()", 0)[0].must.match(/^  OK .+/);
-      rep.spy.getArguments("print()", 1)[0].must.match(/^ | Failed .+/);
-      rep.spy.getArguments("print()", 2)[0].must.match(/^ | Ignored .+/);
-      rep.spy.getArguments("println()", 2)[0].must.match(/^ | Total .+/);
-      rep.spy.getArguments("println()", 3).must.be.eq([""]);
     });
   });
 
@@ -175,7 +165,7 @@ describe("ConsoleReporter", function() {
     var rep;
 
     beforeEach(function() {
-      rep = spy(new ConsoleReporter(), ["endTask()", "print() {}", "println() {}"]);
+      rep = spy(new ConsoleReporter(), ["endTask() {}"]);
     });
 
     it("endTask() - OK", function() {
@@ -184,11 +174,6 @@ describe("ConsoleReporter", function() {
       rep.end(task, ResultState.OK, undefined, 0, 10);
 
       rep.spy.called("endTask()").must.be.eq(1);
-
-      rep.spy.called("print()").must.be.eq(0);
-      rep.spy.called("println()").must.be.eq(2);
-      rep.spy.getArguments("println()", 0).must.be.eq(["\n  Test report"]);
-      rep.spy.getArguments("println()", 1)[0].must.match(/^\[ OK \] test \([0-9]+ ms\)$/);
     });
 
     it("endTask() - FAILED", function() {
@@ -197,12 +182,6 @@ describe("ConsoleReporter", function() {
       rep.end(task, ResultState.FAILED, new Error("Syntax error."), 0, 10);
 
       rep.spy.called("endTask()").must.be.eq(1);
-
-      rep.spy.called("print()").must.be.eq(0);
-      rep.spy.called("println()").must.be.eq(3);
-      rep.spy.getArguments("println()", 0).must.be.eq(["\n  Test report"]);
-      rep.spy.getArguments("println()", 1)[0].must.match(/^\[ ER \] test \([0-9]+ ms\)$/);
-      rep.spy.getArguments("println()", 2)[0].must.match(/Error: Syntax error\./);
     });
   });
 });

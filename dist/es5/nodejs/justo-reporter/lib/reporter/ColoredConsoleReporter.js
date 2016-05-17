@@ -1,4 +1,4 @@
-"use strict";Object.defineProperty(exports, "__esModule", { value: true });var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();var _get = function get(object, property, receiver) {if (object === null) object = Function.prototype;var desc = Object.getOwnPropertyDescriptor(object, property);if (desc === undefined) {var parent = Object.getPrototypeOf(object);if (parent === null) {return undefined;} else {return get(parent, property, receiver);}} else if ("value" in desc) {return desc.value;} else {var getter = desc.get;if (getter === undefined) {return undefined;}return getter.call(receiver);}};
 var _colors = require("colors");var _colors2 = _interopRequireDefault(_colors);
 var _justoResult = require("justo-result");
 var _ConsoleReporter2 = require("./ConsoleReporter");var _ConsoleReporter3 = _interopRequireDefault(_ConsoleReporter2);
@@ -13,11 +13,10 @@ var DEFAULT_THEME = {
 
   task: { 
     title: { 
-      simple: "white", 
-      composite: "black" }, 
+      simple: "gray", 
+      composite: "cyan" }, 
 
     result: { 
-      location: "pre", 
       between: ["[ ", " ]"], 
       ok: { 
         text: "OK", 
@@ -29,7 +28,11 @@ var DEFAULT_THEME = {
 
       ignored: { 
         text: "IG", 
-        color: "grey" } } } };var 
+        color: "white" }, 
+
+      running: { 
+        text: "CR", 
+        color: "yellow" } } } };var 
 
 
 
@@ -47,25 +50,38 @@ ColoredConsoleReporter = function (_ConsoleReporter) {_inherits(ColoredConsoleRe
 
 
 
+
+
+
+
+
+
+
+
+
     {
-      return JSON.parse(JSON.stringify(DEFAULT_THEME));} }, { key: "endReport", value: function endReport() 
+      return JSON.parse(JSON.stringify(DEFAULT_THEME));} }, { key: "getOkTitle", value: function getOkTitle() 
 
 
 
 
 
     {
-      var rep = this.report;
-      var ok = rep.getNumberOf(_justoResult.ResultState.OK);
-      var failed = rep.getNumberOf(_justoResult.ResultState.FAILED);
-      var ignored = rep.getNumberOf(_justoResult.ResultState.IGNORED);
+      return _colors2.default[this.theme.task.result.ok.color]("OK");} }, { key: "getFailedTitle", value: function getFailedTitle() 
 
-      this.println("");
-      this.print("  " + _colors2.default[this.theme.task.result.ok.color]("OK") + " " + ok);
-      this.print(" | " + _colors2.default[this.theme.task.result.failed.color]("Failed") + " " + failed);
-      this.print(" | " + _colors2.default[this.theme.task.result.ignored.color]("Ignored") + " " + ignored);
-      this.println(" | Total " + (ok + failed + ignored));
-      this.println("");} }, { key: "formatReportTitle", value: function formatReportTitle(
+
+
+
+
+    {
+      return _colors2.default[this.theme.task.result.failed.color]("Failed");} }, { key: "getIgnoredTitle", value: function getIgnoredTitle() 
+
+
+
+
+
+    {
+      return _colors2.default[this.theme.task.result.ignored.color]("Ignored");} }, { key: "formatReportTitle", value: function formatReportTitle(
 
 
 
@@ -107,9 +123,5 @@ ColoredConsoleReporter = function (_ConsoleReporter) {_inherits(ColoredConsoleRe
 
 
 
-    err, level) {
-      return _colors2.default[this.theme.task.result.failed.color]((0, _util.indent)(this.stackTrace ? err.stack || err.toString() : err.toString(), level + 1, "  "));} }], [{ key: "DEFAULT_THEME", get: function get() 
-
-
-    {
-      return DEFAULT_THEME;} }]);return ColoredConsoleReporter;}(_ConsoleReporter3.default);exports.default = ColoredConsoleReporter;
+    err) {
+      return _colors2.default[this.theme.task.result.failed.color](_get(Object.getPrototypeOf(ColoredConsoleReporter.prototype), "formatTaskError", this).call(this, err));} }], [{ key: "DEFAULT_THEME", get: function get() {return DEFAULT_THEME;} }]);return ColoredConsoleReporter;}(_ConsoleReporter3.default);exports.default = ColoredConsoleReporter;
