@@ -34,6 +34,7 @@ var printError = Symbol();
 var buildSimpleResult = Symbol();
 var printSimpleResult = Symbol();
 var logSimpleResult = Symbol();
+var confirmSimpleResult = Symbol();
 var logCompositeResult = Symbol();var 
 
 
@@ -215,7 +216,7 @@ ConsoleReporter = function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
 
         this.console.level -= 1;} else 
       {
-        this[logSimpleResult](res.state, res.title, res.time);
+        this[confirmSimpleResult](res.state, res.title, res.time);
         if (res.state === _justoResult.ResultState.FAILED) this[printError](res.error);}} }, { key: 
 
 
@@ -249,6 +250,10 @@ ConsoleReporter = function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
 
     logSimpleResult, value: function value(state, title, time) {
       this.console.log(this[buildSimpleResult](state, title, time));} }, { key: 
+
+
+    confirmSimpleResult, value: function value(state, title, time) {
+      this.console.confirm(this[buildSimpleResult](state, title, time));} }, { key: 
 
 
     logCompositeResult, value: function value(title) {
