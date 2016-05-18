@@ -30,9 +30,6 @@ var DEFAULT_THEME = {
 
 
 
-var console = new _justoConsole2.default();
-
-
 var printError = Symbol();
 var buildSimpleResult = Symbol();
 var printSimpleResult = Symbol();
@@ -66,7 +63,8 @@ ConsoleReporter = function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
 
 
     opts));
-    Object.defineProperty(_this, "theme", { value: (0, _deepAssign2.default)({}, _this.getDefaultTheme(), opts.theme || {}), enumerable: true });return _this;}_createClass(ConsoleReporter, [{ key: "getDefaultTheme", value: function getDefaultTheme() 
+    Object.defineProperty(_this, "theme", { value: (0, _deepAssign2.default)({}, _this.getDefaultTheme(), opts.theme || {}), enumerable: true });
+    Object.defineProperty(_this, "console", { value: opts.console || new _justoConsole2.default() });return _this;}_createClass(ConsoleReporter, [{ key: "getDefaultTheme", value: function getDefaultTheme() 
 
 
 
@@ -92,8 +90,8 @@ ConsoleReporter = function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
 
 
     title) {
-      console.level = 1;
-      console.log("\n", this.formatReportTitle(title));} }, { key: "formatReportTitle", value: function formatReportTitle(
+      this.console.level = 1;
+      this.console.log("\n", this.formatReportTitle(title));} }, { key: "formatReportTitle", value: function formatReportTitle(
 
 
 
@@ -113,19 +111,19 @@ ConsoleReporter = function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
       var ignored = rep.getNumberOf(_justoResult.ResultState.IGNORED);
 
 
-      console.log();
+      this.console.log();
 
-      console.log(
+      this.console.log(
       this.getOkTitle() + " " + ok, "| " + 
       this.getFailedTitle() + " " + failed, "| " + 
       this.getIgnoredTitle() + " " + ignored, "| Total " + (
       ok + failed + ignored));
 
 
-      console.log();
+      this.console.log();
 
 
-      console.level = 0;} }, { key: "getOkTitle", value: function getOkTitle() 
+      this.console.level = 0;} }, { key: "getOkTitle", value: function getOkTitle() 
 
 
 
@@ -198,7 +196,7 @@ ConsoleReporter = function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
       var result = this.theme.task.result;
 
       if (task.isComposite()) {
-        console.level += 1;
+        this.console.level += 1;
         this[logCompositeResult](title);} else 
       {
         this[printSimpleResult](_justoResult.ResultState.RUNNING, title);}} }, { key: "endTask", value: function endTask(
@@ -215,7 +213,7 @@ ConsoleReporter = function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
           if (res.ownError) this[printError](res.ownError);}
 
 
-        console.level -= 1;} else 
+        this.console.level -= 1;} else 
       {
         this[logSimpleResult](res.state, res.title, res.time);
         if (res.state === _justoResult.ResultState.FAILED) this[printError](res.error);}} }, { key: 
@@ -224,7 +222,7 @@ ConsoleReporter = function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
 
 
     printError, value: function value(error) {
-      console.log(this.formatTaskError(error));} }, { key: 
+      this.console.log(this.formatTaskError(error));} }, { key: 
 
 
     buildSimpleResult, value: function value(state, title, time) {
@@ -246,12 +244,12 @@ ConsoleReporter = function (_Reporter) {_inherits(ConsoleReporter, _Reporter);
 
 
     printSimpleResult, value: function value(state, title, time) {
-      console.print(this[buildSimpleResult](state, title, time));} }, { key: 
+      this.console.print(this[buildSimpleResult](state, title, time));} }, { key: 
 
 
     logSimpleResult, value: function value(state, title, time) {
-      console.log(this[buildSimpleResult](state, title, time));} }, { key: 
+      this.console.log(this[buildSimpleResult](state, title, time));} }, { key: 
 
 
     logCompositeResult, value: function value(title) {
-      console.log(this.formatCompositeTaskTitle(title));} }], [{ key: "DEFAULT_THEME", get: function get() {return DEFAULT_THEME;} }]);return ConsoleReporter;}(_Reporter3.default);exports.default = ConsoleReporter;
+      this.console.log(this.formatCompositeTaskTitle(title));} }], [{ key: "DEFAULT_THEME", get: function get() {return DEFAULT_THEME;} }]);return ConsoleReporter;}(_Reporter3.default);exports.default = ConsoleReporter;
