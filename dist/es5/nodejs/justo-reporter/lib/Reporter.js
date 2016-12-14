@@ -7,7 +7,7 @@ var _Stack = require("./Stack");var _Stack2 = _interopRequireDefault(_Stack);fun
 var startReport = Symbol();
 var startTask = Symbol();
 var endTask = Symbol();
-var endReport = Symbol();var 
+var endReport = Symbol();var
 
 
 
@@ -31,7 +31,7 @@ Reporter = function () {
 
 
 
-  function Reporter() {var opts = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];_classCallCheck(this, Reporter);
+  function Reporter() {var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, Reporter);
 
     if (typeof opts == "string") opts = { name: opts };
     if (!opts) opts = {};
@@ -41,8 +41,8 @@ Reporter = function () {
     Object.defineProperty(this, "enabled", { value: opts.hasOwnProperty("enabled") ? !!opts.enabled : true, enumerable: true });
     Object.defineProperty(this, "stack", { value: new _Stack2.default() });
     Object.defineProperty(this, "stackTrace", { value: opts.hasOwnProperty("stackTrace") ? !!opts.stackTrace : true });
-    Object.defineProperty(this, "_report", { value: undefined, writable: true });}_createClass(Reporter, [{ key: "start", value: function start(
-
+    Object.defineProperty(this, "_report", { value: undefined, writable: true });
+  }_createClass(Reporter, [{ key: "start", value: function start(
 
 
 
@@ -87,10 +87,10 @@ Reporter = function () {
       if (this.disabled) return;
 
 
-      if (arguments.length === 0) throw new Error("Invalid number of arguments. Expected at least one.");else 
-      if (arguments.length === 1) this[startReport](title);else 
-      this[startTask](title, task);} }, { key: "end", value: function end() 
-
+      if (arguments.length === 0) throw new Error("Invalid number of arguments. Expected at least one.");else
+      if (arguments.length === 1) this[startReport](title);else
+      this[startTask](title, task);
+    } }, { key: "end", value: function end()
 
 
 
@@ -110,9 +110,9 @@ Reporter = function () {
       if (this.disabled) return;
 
 
-      if (arguments.length === 0) this[endReport]();else 
-      this[endTask].apply(this, arguments);} }, { key: "ignore", value: function ignore(
-
+      if (arguments.length === 0) this[endReport]();else
+      this[endTask].apply(this, arguments);
+    } }, { key: "ignore", value: function ignore(
 
 
 
@@ -127,8 +127,8 @@ Reporter = function () {
       if (this.disabled) return;
 
       if (!this.started) {
-        throw new Error("No report started.");}
-
+        throw new Error("No report started.");
+      }
 
 
       if (arguments.length < 2) throw new Error("Invalid number of arguments. Expected two.");
@@ -136,40 +136,43 @@ Reporter = function () {
 
       parent = this.stack.top;
 
-      if (task.isSimple()) res = new _justoResult.SimpleTaskResult(parent, title, task, _justoResult.ResultState.IGNORED);else 
+      if (task.isSimple()) res = new _justoResult.SimpleTaskResult(parent, title, task, _justoResult.ResultState.IGNORED);else
       res = new _justoResult.CompositeTaskResult(parent, title, task, _justoResult.ResultState.IGNORED);
 
 
       if (!res.hasParent()) {
-        this.report.add(res);}
+        this.report.add(res);
+      }
+
+
+      this.ignoreTask(res);
+    } }, { key: "ignoreTask", value: function ignoreTask(
 
 
 
-      this.ignoreTask(res);} }, { key: "ignoreTask", value: function ignoreTask(
 
 
 
 
+    res) {
 
-
-
-
-    res) {} }, { key: 
-
-
+    } }, { key:
 
 
 
 
     startReport, value: function value(title) {
       if (this.stack.hasResults()) {
-        throw new Error("Invalid start of report. There're tasks.");} else 
-      {
+        throw new Error("Invalid start of report. There're tasks.");
+      } else {
         if (this.started) {
-          throw new Error("Report already started.");} else 
-        {
+          throw new Error("Report already started.");
+        } else {
           this._report = new _Report2.default(title);
-          this.startReport(title);}}} }, { key: "startReport", value: function startReport(
+          this.startReport(title);
+        }
+      }
+    } }, { key: "startReport", value: function startReport(
 
 
 
@@ -177,12 +180,9 @@ Reporter = function () {
 
 
 
+    title) {
 
-
-
-    title) {} }, { key: 
-
-
+    } }, { key:
 
 
 
@@ -190,25 +190,25 @@ Reporter = function () {
     endReport, value: function value() {
 
       if (!this.started) {
-        throw new Error("Invalid end of report. No report started.");}
-
+        throw new Error("Invalid end of report. No report started.");
+      }
 
       if (this.stack.hasResults()) {
-        throw new Error("Invalid end of report. There're active tasks.");}
-
+        throw new Error("Invalid end of report. There're active tasks.");
+      }
 
       this.endReport();
-      this._report = undefined;} }, { key: "endReport", value: function endReport() 
+      this._report = undefined;
+    } }, { key: "endReport", value: function endReport()
 
 
 
 
 
 
+    {
 
-    {} }, { key: 
-
-
+    } }, { key:
 
 
 
@@ -218,23 +218,24 @@ Reporter = function () {
 
 
       if (!task) {
-        throw new Error("Invalid number of arguments. Expected title and task. Only one received.");}
-
+        throw new Error("Invalid number of arguments. Expected title and task. Only one received.");
+      }
 
       if (!this.started) {
-        throw new Error("No report started.");}
-
+        throw new Error("No report started.");
+      }
 
 
       parent = this.stack.top;
 
-      if (task.isSimple()) res = new _justoResult.SimpleTaskResult(parent, title, task);else 
+      if (task.isSimple()) res = new _justoResult.SimpleTaskResult(parent, title, task);else
       res = new _justoResult.CompositeTaskResult(parent, title, task);
 
       this.stack.push(res);
 
 
-      this.startTask(title, task);} }, { key: "startTask", value: function startTask(
+      this.startTask(title, task);
+    } }, { key: "startTask", value: function startTask(
 
 
 
@@ -243,10 +244,9 @@ Reporter = function () {
 
 
 
+    title, task) {
 
-    title, task) {} }, { key: 
-
-
+    } }, { key:
 
 
 
@@ -258,8 +258,8 @@ Reporter = function () {
       res = this.stack.pop();
 
       if (res.task !== task) {
-        throw new Error("Invalid end of task. Another task must be ended firstly.");}
-
+        throw new Error("Invalid end of task. Another task must be ended firstly.");
+      }
 
 
       if (res.isSimple() || state === _justoResult.ResultState.FAILED) res.setResult(state, error, start, end);
@@ -268,7 +268,8 @@ Reporter = function () {
       if (!res.hasParent()) this.report.add(res);
 
 
-      this.endTask(res);} }, { key: "endTask", value: function endTask(
+      this.endTask(res);
+    } }, { key: "endTask", value: function endTask(
 
 
 
@@ -276,5 +277,6 @@ Reporter = function () {
 
 
 
+    res) {
 
-    res) {} }, { key: "report", get: function get() {return this._report;} }, { key: "started", get: function get() {return !!this.report;} }, { key: "disabled", get: function get() {return !this.enabled;} }]);return Reporter;}();exports.default = Reporter;
+    } }, { key: "report", get: function get() {return this._report;} }, { key: "started", get: function get() {return !!this.report;} }, { key: "disabled", get: function get() {return !this.enabled;} }]);return Reporter;}();exports.default = Reporter;
